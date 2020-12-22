@@ -1,6 +1,86 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+class ItemColor {
+  const ItemColor({
+    this.background,
+    this.labelBackground,
+    this.durationBackground,
+  })  : assert(background != null),
+        assert(labelBackground != null),
+        assert(durationBackground != null);
+
+  final dynamic background;
+  final dynamic labelBackground;
+  final dynamic durationBackground;
+}
+
+List<int> last3ItemColorIndexes = [];
+List<ItemColor> itemColors = [
+  new ItemColor(
+    background: Colors.brown,
+    labelBackground: Colors.brown[700],
+    durationBackground: Colors.brown[700],
+  ),
+  new ItemColor(
+    background: Colors.deepPurple,
+    labelBackground: Colors.deepPurple[800],
+    durationBackground: Colors.deepPurple[800],
+  ),
+  new ItemColor(
+    background: Colors.teal,
+    labelBackground: Colors.teal[800],
+    durationBackground: Colors.teal[800],
+  ),
+  new ItemColor(
+    background: Colors.amber,
+    labelBackground: Colors.amber[800],
+    durationBackground: Colors.amber[800],
+  ),
+  new ItemColor(
+    background: Colors.blue,
+    labelBackground: Colors.blue[800],
+    durationBackground: Colors.blue[800],
+  ),
+  new ItemColor(
+    background: Colors.pink,
+    labelBackground: Colors.pink[800],
+    durationBackground: Colors.pink[800],
+  ),
+];
+
+ItemColor generateItemColor() {
+  ItemColor color = (itemColors.toList()..shuffle()).first;
+  int colorIndex = itemColors.indexOf(color);
+
+  if (last3ItemColorIndexes.indexOf(colorIndex) != -1) {
+    return generateItemColor();
+  }
+
+  if (last3ItemColorIndexes.length >= 3) {
+    last3ItemColorIndexes.removeAt(0);
+  }
+
+  last3ItemColorIndexes.add(colorIndex);
+
+  return color;
+}
+
+class Item {
+  final int endDate;
+  final String kind;
+  final String label;
+  final ItemColor color = generateItemColor();
+
+  Item(this.label, this.kind, this.endDate);
+}
+
+List<Item> items = [
+  new Item('Corona Virus', 'ending', 1609459201),
+  new Item('New year', 'starting', 1609459201),
+  new Item('New Television', 'arriving', 1609459201),
+];
+
 class CountDown extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -9,41 +89,47 @@ class CountDown extends StatefulWidget {
 }
 
 class CountDownState extends State<CountDown> {
+  int _currentPageIndex = 0;
+  PageController _pageController;
+
   @override
   void initState() {
     super.initState();
+    _pageController = new PageController();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _pageController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    AppBar appBar = AppBar(
+      elevation: 0.0,
+      actions: _appBarActions(),
+      backgroundColor: Colors.transparent,
+    );
+
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0.0,
-        actions: _appBarActions(),
-        backgroundColor: Colors.transparent,
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Container(
-          padding: EdgeInsets.only(top: 80, bottom: 20),
-          child: Column(
-            children: <Widget>[
-              _title(),
-              SizedBox(height: 20),
-              _duration(),
-            ],
-          ),
-        ),
+      extendBodyBehindAppBar: true,
+      appBar: appBar,
+      body: PageView.builder(
+        controller: _pageController,
+        onPageChanged: onPageChanged,
+        scrollDirection: Axis.vertical,
+        itemCount: items.length,
+        itemBuilder: (BuildContext context, int index) => _buildPage(items[index], appBar.preferredSize.height),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Add your onPressed code here!
+          navigateToNextPage();
         },
         elevation: 0.0,
         child: Icon(
-          Icons.arrow_circle_down,
+          isLastPage ? Icons.arrow_circle_up : Icons.arrow_circle_down,
           size: 40,
         ),
         foregroundColor: Colors.white70,
@@ -63,17 +149,33 @@ class CountDownState extends State<CountDown> {
     return [layoutModeButton];
   }
 
-  Widget _title() {
+  Widget _buildPage(Item item, double appBarHeight) {
+    return Container(
+      decoration: BoxDecoration(color: item.color.background),
+      padding: EdgeInsets.only(top: appBarHeight, bottom: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          _buildTitle(item),
+          SizedBox(height: 20),
+          _buildDuration(item),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTitle(Item item) {
     return Column(
       children: [
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text(
-            'Corona virus',
+            item.label,
             style: TextStyle(
               fontSize: 50,
-              backgroundColor: Colors.blue,
               fontStyle: FontStyle.italic,
+              backgroundColor: item.color.labelBackground,
             ),
           ),
         ),
@@ -81,7 +183,7 @@ class CountDownState extends State<CountDown> {
           height: 20,
         ),
         Text(
-          'Ending in:',
+          '${toBeginningOfSentenceCase(item.kind)} in:',
           style: TextStyle(
             fontSize: 30,
           ),
@@ -90,44 +192,43 @@ class CountDownState extends State<CountDown> {
     );
   }
 
-  Widget _duration() {
-    int endTimestamp = 1609459201; // todo fix me :)
+  Widget _buildDuration(Item item) {
     return new Container(
       width: 400,
       height: 400,
       margin: const EdgeInsets.all(10),
       decoration: new BoxDecoration(
-        color: Theme.of(context).primaryColor,
         shape: BoxShape.circle,
+        color: item.color.durationBackground,
       ),
       child: StreamBuilder(
         stream: Stream.periodic(Duration(seconds: 1), (i) => i),
         builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
           DateTime now = DateTime.now();
-          DateTime endDate = DateTime.fromMillisecondsSinceEpoch(endTimestamp * 1000);
+          DateTime endDate = DateTime.fromMillisecondsSinceEpoch(item.endDate * 1000);
           Duration remaining = Duration(milliseconds: endDate.millisecondsSinceEpoch - now.millisecondsSinceEpoch);
 
-          return _remainingDateAndTime(remaining);
+          return _buildRemainingDateAndTime(remaining);
         },
       ),
     );
   }
 
-  Widget _remainingDateAndTime(Duration remaining) {
+  Widget _buildRemainingDateAndTime(Duration remaining) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.baseline,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
               '${remaining.inDays}',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 100),
             ),
             SizedBox(
-              width: 7,
+              width: 4,
             ),
             Text(
               'Days',
@@ -199,9 +300,28 @@ class CountDownState extends State<CountDown> {
             ),
           ],
         ),
-        SizedBox(height: 10),
       ],
     );
+  }
+
+  void onPageChanged(int page) {
+    setState(() {
+      this._currentPageIndex = page;
+    });
+  }
+
+  void navigateToNextPage() {
+    int nextPageIndex = isLastPage ? _currentPageIndex - 1 : _currentPageIndex + 1;
+
+    _pageController.animateToPage(
+      nextPageIndex,
+      curve: Curves.ease,
+      duration: Duration(milliseconds: 300),
+    );
+  }
+
+  get isLastPage {
+    return _currentPageIndex == (items.length - 1);
   }
 }
 
