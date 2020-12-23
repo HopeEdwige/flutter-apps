@@ -1,27 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class CountdownTitle extends StatelessWidget {
+class Header extends StatelessWidget {
   final String title;
   final String kind;
   final dynamic backgroundColor;
 
-  const CountdownTitle({Key key, this.title, this.kind, this.backgroundColor}) : super(key: key);
+  const Header({Key key, this.title, this.kind, this.backgroundColor}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            title,
-            style: TextStyle(
-              fontSize: 50,
-              fontStyle: FontStyle.italic,
-              backgroundColor: backgroundColor,
-            ),
+        Text(
+          title,
+          style: TextStyle(
+            fontSize: 50,
+            fontStyle: FontStyle.italic,
+            backgroundColor: backgroundColor,
           ),
+          textAlign: TextAlign.center,
         ),
         SizedBox(
           height: 20,

@@ -7,7 +7,7 @@ class CountdownItem {
   final String label;
   final CountdownShade shadeCard;
 
-  CountdownItem(this.label, this.kind, this.endDate)
+  CountdownItem({this.label, this.kind, this.endDate})
       : shadeCard = generateShade(),
         assert(kind != null),
         assert(label != null),

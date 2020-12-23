@@ -1,11 +1,29 @@
-import 'package:countdown_timer/models/countdown_item.dart';
 import 'package:flutter/material.dart';
 import 'package:countdown_timer/screens/home/index.dart';
+import 'package:countdown_timer/models/countdown_item.dart';
 
+var nextYear = DateTime.now().year + 1;
 List<CountdownItem> countdownItems = [
-  new CountdownItem('Corona Virus', 'ending', 1609459201),
-  new CountdownItem('New year', 'starting', 1609459201),
-  new CountdownItem('New Television', 'arriving', 1609459201),
+  new CountdownItem(
+    kind: 'ending',
+    label: 'Covid-19 Pandemic',
+    endDate: DateTime(nextYear, DateTime.december).millisecondsSinceEpoch,
+  ),
+  new CountdownItem(
+    kind: 'beginning',
+    label: 'New year',
+    endDate: DateTime(nextYear, DateTime.january).millisecondsSinceEpoch,
+  ),
+  new CountdownItem(
+    kind: 'coming',
+    label: 'Next Birthday',
+    endDate: DateTime(nextYear, DateTime.july, 16).millisecondsSinceEpoch,
+  ),
+  new CountdownItem(
+    kind: 'arriving',
+    label: 'New Package',
+    endDate: DateTime(nextYear, DateTime.february, 27).millisecondsSinceEpoch,
+  ),
 ];
 
 class Routes {
@@ -22,6 +40,7 @@ class Routes {
       ),
       title: 'Countdown Timer',
       routes: routes,
+      debugShowCheckedModeBanner: false,
     ));
   }
 }

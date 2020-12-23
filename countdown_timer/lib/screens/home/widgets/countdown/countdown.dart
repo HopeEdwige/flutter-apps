@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:countdown_timer/util/format_utils.dart';
 
-class CountdownDuration extends StatelessWidget {
+class Countdown extends StatelessWidget {
   final int endDate;
   final dynamic backgroundColor;
 
-  const CountdownDuration({Key key, this.endDate, this.backgroundColor}) : super(key: key);
+  const Countdown({Key key, this.endDate, this.backgroundColor}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,7 @@ class CountdownDuration extends StatelessWidget {
         stream: Stream.periodic(Duration(seconds: 1), (i) => i),
         builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
           DateTime now = DateTime.now();
-          DateTime endDateEpoch = DateTime.fromMillisecondsSinceEpoch(endDate * 1000);
+          DateTime endDateEpoch = DateTime.fromMillisecondsSinceEpoch(endDate);
           Duration remaining = Duration(milliseconds: endDateEpoch.millisecondsSinceEpoch - now.millisecondsSinceEpoch);
 
           return _buildRemainingDateAndTime(remaining);

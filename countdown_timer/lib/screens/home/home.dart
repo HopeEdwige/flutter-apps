@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:countdown_timer/models/countdown_item.dart';
 
-import 'widgets/countdown_title/countdown_title.dart';
-import 'widgets/countdown_duration/countdown_duration.dart';
+import 'widgets/header/index.dart';
+import 'widgets/countdown/index.dart';
 
 class Home extends StatefulWidget {
   final List<CountdownItem> countdownItems;
@@ -52,7 +52,7 @@ class HomeState extends State<Home> {
             padding: EdgeInsets.only(right: 20.0),
             child: GestureDetector(
               onTap: () {},
-              child: Icon(Icons.list),
+              child: Icon(Icons.add),
             )),
       ],
       backgroundColor: Colors.transparent,
@@ -67,25 +67,28 @@ class HomeState extends State<Home> {
       }),
       scrollDirection: Axis.vertical,
       itemCount: widget.countdownItems.length,
-      itemBuilder: (BuildContext context, int index) => _buildCountdown(widget.countdownItems[index], appBar.preferredSize.height),
+      itemBuilder: (BuildContext context, int index) => _buildCountdownPageItem(widget.countdownItems[index], appBar.preferredSize.height),
     );
   }
 
-  Widget _buildCountdown(CountdownItem item, double appBarHeight) {
+  Widget _buildCountdownPageItem(CountdownItem item, double appBarHeight) {
     return Container(
+      width: double.infinity,
       decoration: BoxDecoration(color: item.shadeCard.background),
       padding: EdgeInsets.only(top: appBarHeight, bottom: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          CountdownTitle(
+          Header(
             kind: item.kind,
             title: item.label,
             backgroundColor: item.shadeCard.labelBackground,
           ),
-          SizedBox(height: 20),
-          CountdownDuration(
+          SizedBox(
+            height: 20,
+          ),
+          Countdown(
             endDate: item.endDate,
             backgroundColor: item.shadeCard.durationBackground,
           )
