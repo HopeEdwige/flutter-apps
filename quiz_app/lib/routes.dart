@@ -3,7 +3,7 @@ import 'package:quiz_app/screens/home_screen/index.dart';
 
 class Routes {
   final routes = <String, WidgetBuilder>{
-    '/': (BuildContext context) => new Home(title: 'Home'),
+    '/': (BuildContext context) => new HomeScreen(),
   };
 
   Routes() {
