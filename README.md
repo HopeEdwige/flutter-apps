@@ -6,7 +6,7 @@ Few common apps, built with flutter.
 
 ## Check list
 - [X] [Countdown Timer](countdown_timer)
-- [ ] Quiz App
+- [ ] [Quiz App](quiz_app)
 - [ ] Recipe App
 - [ ] Notes App
 - [ ] ToDo App
