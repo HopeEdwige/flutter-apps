@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+
 import 'package:quiz_app/screens/home_screen/index.dart';
+import 'package:quiz_app/screens/topics_screen/index.dart';
 
 class Routes {
   final routes = <String, WidgetBuilder>{
     '/': (BuildContext context) => new HomeScreen(),
+    '/topics': (BuildContext context) => new TopicsScreen(),
   };
 
   Routes() {
