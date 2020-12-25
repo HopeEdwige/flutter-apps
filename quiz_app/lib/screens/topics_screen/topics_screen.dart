@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:quiz_app/models/topic.dart';
 
 import 'widgets/topic_card/index.dart';
+import 'package:quiz_app/models/topic.dart';
 
 const CircleColor = Colors.indigo;
 

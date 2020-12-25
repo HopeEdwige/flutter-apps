@@ -7,6 +7,7 @@ class Routes {
   final routes = <String, WidgetBuilder>{
     '/': (BuildContext context) => new HomeScreen(),
     '/topics': (BuildContext context) => new TopicsScreen(),
+    // '/quiz': () => new QuizScreen(questions: null),
   };
 
   Routes() {

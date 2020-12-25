@@ -1,7 +1,10 @@
+import 'dart:io';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:quiz_app/models/topic.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:quiz_app/services/quiz_services.dart';
+import 'package:quiz_app/widgets/loading_overlay.dart';
 
 class TopicCard extends StatelessWidget {
   final Topic topic;
@@ -15,7 +18,19 @@ class TopicCard extends StatelessWidget {
     return MaterialButton(
       elevation: 1.0,
       highlightElevation: 1.0,
-      onPressed: () => {},
+      onPressed: () async {
+        try {
+          final overlay = LoadingOverlay.of(context);
+          final result = await overlay.during(getQuizData(topic));
+
+          if (result.length < 1) {
+            print('No questions found');
+            return;
+          }
+        } catch (e) {
+          print('Unexpected error trying to connect to the API ' + e.message);
+        }
+      },
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),
       ),
