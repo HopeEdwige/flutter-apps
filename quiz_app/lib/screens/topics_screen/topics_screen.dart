@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:quiz_app/models/topic.dart';
 
 import 'widgets/topic_card/index.dart';
 
-const CircleColor = Color.fromRGBO(13, 71, 161, 1);
+const CircleColor = Colors.indigo;
 
 class TopicsScreen extends StatelessWidget {
   TopicsScreen({Key key}) : super(key: key);
@@ -29,26 +30,36 @@ class TopicsScreen extends StatelessWidget {
             margin: const EdgeInsets.only(top: 8),
             child: Column(
               children: [
-                Text('Quiz Topics', style: TextStyle(fontSize: 25)),
+                Text('Quiz Topics', style: TextStyle(fontSize: 25, color: Colors.white)),
                 SizedBox(
-                  height: 60,
+                  height: 50,
                 ),
                 AnimationLimiter(
                   child: Flexible(
                     child: GridView.count(
                       crossAxisCount: 2,
-                      childAspectRatio: 1.25,
-                      padding: const EdgeInsets.all(8.0),
+                      childAspectRatio: 1.3,
                       shrinkWrap: true,
-                      physics: BouncingScrollPhysics(),
+                      crossAxisSpacing: 20,
+                      mainAxisSpacing: 20,
+                      physics: const BouncingScrollPhysics(),
+                      padding: const EdgeInsets.only(
+                        bottom: 50,
+                        left: 20,
+                        right: 20,
+                        top: 20,
+                      ),
                       children: List.generate(
-                        8,
+                        topics.length,
                         (int index) {
                           return AnimationConfiguration.staggeredGrid(
                             columnCount: 3,
                             position: index,
                             duration: const Duration(milliseconds: 420),
-                            child: const ScaleAnimation(scale: 0.3, child: TopicCard()),
+                            child: ScaleAnimation(
+                              scale: 0.3,
+                              child: TopicCard(topic: topics[index]),
+                            ),
                           );
                         },
                       ),
@@ -78,7 +89,7 @@ class Pattern extends CustomPainter {
     // Main background setup
     final Path mainBackground = Path();
     mainBackground.addRect(Rect.fromLTRB(0, 0, width, height));
-    paint.color = theme.primaryColor;
+    paint.color = theme.canvasColor;
     canvas.drawPath(mainBackground, paint);
 
     // Circle colors
