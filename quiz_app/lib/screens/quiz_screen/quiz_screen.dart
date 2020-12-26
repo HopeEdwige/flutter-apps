@@ -206,11 +206,13 @@ class Pattern extends CustomPainter {
     // Circle colors
     paint.color = darken(color, .25);
 
+    final double circleRadius = 150;
+
     //bottom left circle
-    canvas.drawCircle(Offset(0, height - (200 / 4)), 200, paint);
+    canvas.drawCircle(Offset(-10, height - (circleRadius / 4)), circleRadius, paint);
 
     //top right circle
-    canvas.drawCircle(Offset(width + (150 / 2.1), height / 7), 150, paint);
+    canvas.drawCircle(Offset(width + (circleRadius / 2.1), height / 7), circleRadius, paint);
   }
 
   @override
