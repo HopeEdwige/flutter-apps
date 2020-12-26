@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+import 'package:quiz_app/models/topic.dart';
+import 'package:quiz_app/services/quiz_services.dart';
+import 'package:quiz_app/widgets/loading_overlay.dart';
+
 class HomeScreen extends StatelessWidget {
   HomeScreen({Key key}) : super(key: key);
 
@@ -51,7 +55,7 @@ class HomeScreen extends StatelessWidget {
                   alignment: MainAxisAlignment.center,
                   children: <Widget>[
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () => _handleRandomTopicClick(context),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
                         child: Text('Play random topic', style: TextStyle(fontSize: 16)),
@@ -63,7 +67,7 @@ class HomeScreen extends StatelessWidget {
                       },
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-                        child: Text('Topics', style: TextStyle(fontSize: 16)),
+                        child: Text('Browse topics', style: TextStyle(fontSize: 16)),
                       ),
                     ),
                   ],
@@ -74,5 +78,21 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  _handleRandomTopicClick(BuildContext context) async {
+    final topic = (topics.toList()..shuffle()).first;
+    try {
+      final overlay = LoadingOverlay.of(context);
+      final quizData = await overlay.during(getQuizData(topic));
+
+      if (quizData.length < 1) {
+        print('No questions found');
+        return;
+      }
+      Navigator.pushNamed(context, '/quiz', arguments: {'questions': quizData, 'topic': topic});
+    } catch (e) {
+      print('Unexpected error trying to connect to the API ' + e.message);
+    }
   }
 }
