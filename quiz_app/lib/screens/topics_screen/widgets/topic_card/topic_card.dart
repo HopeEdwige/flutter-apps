@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:quiz_app/models/question.dart';
 import 'package:quiz_app/models/topic.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:quiz_app/services/quiz_services.dart';
@@ -13,7 +14,7 @@ class TopicCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final ThemeData theme = Theme.of(context);
 
     return MaterialButton(
       elevation: 1.0,
@@ -21,12 +22,13 @@ class TopicCard extends StatelessWidget {
       onPressed: () async {
         try {
           final overlay = LoadingOverlay.of(context);
-          final result = await overlay.during(getQuizData(topic));
+          final quizData = await overlay.during(getQuizData(topic));
 
-          if (result.length < 1) {
+          if (quizData.length < 1) {
             print('No questions found');
             return;
           }
+          Navigator.pushNamed(context, '/quiz', arguments: {'questions': quizData, 'topic': topic});
         } catch (e) {
           print('Unexpected error trying to connect to the API ' + e.message);
         }

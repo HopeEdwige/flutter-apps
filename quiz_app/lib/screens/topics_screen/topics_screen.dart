@@ -11,8 +11,8 @@ class TopicsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final size = MediaQuery.of(context).size;
+    final ThemeData theme = Theme.of(context);
+    final Size size = MediaQuery.of(context).size;
 
     return Scaffold(
       appBar: AppBar(
@@ -27,7 +27,7 @@ class TopicsScreen extends StatelessWidget {
           child: Container(
             width: size.width,
             height: size.height,
-            margin: const EdgeInsets.only(top: 8),
+            margin: const EdgeInsets.only(top: 4),
             child: Column(
               children: [
                 Text('Quiz Topics', style: TextStyle(fontSize: 25, color: Colors.white)),
