@@ -46,7 +46,7 @@ class HomeScreen extends StatelessWidget {
                 ),
                 Text(
                   'Powered by Flutter and Open Trivia DB API.',
-                  style: theme.textTheme.subtitle1,
+                  style: theme.textTheme.subtitle2,
                 ),
                 SizedBox(
                   height: 20,
@@ -84,13 +84,13 @@ class HomeScreen extends StatelessWidget {
     final topic = (topics.toList()..shuffle()).first;
     try {
       final overlay = LoadingOverlay.of(context);
-      final quizData = await overlay.during(getQuizData(topic));
+      final quizItems = await overlay.during(getQuizData(topic));
 
-      if (quizData.length < 1) {
+      if (quizItems.length < 1) {
         print('No questions found');
         return;
       }
-      Navigator.pushNamed(context, '/quiz', arguments: {'questions': quizData, 'topic': topic});
+      Navigator.pushNamed(context, '/quiz', arguments: {'quizItems': quizItems, 'topic': topic});
     } catch (e) {
       print('Unexpected error trying to connect to the API ' + e.message);
     }

@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:quiz_app/models/question.dart';
+import 'package:quiz_app/models/quiz_item.dart';
 import 'package:quiz_app/models/topic.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:quiz_app/services/quiz_services.dart';
@@ -28,7 +28,7 @@ class TopicCard extends StatelessWidget {
             print('No questions found');
             return;
           }
-          Navigator.pushNamed(context, '/quiz', arguments: {'questions': quizData, 'topic': topic});
+          Navigator.pushNamed(context, '/quiz', arguments: {'quizItems': quizData, 'topic': topic});
         } catch (e) {
           print('Unexpected error trying to connect to the API ' + e.message);
         }

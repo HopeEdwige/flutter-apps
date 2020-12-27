@@ -11,11 +11,18 @@ class Routes {
     '/topics': (BuildContext context) => new TopicsScreen(),
     '/quiz': (BuildContext context) {
       final arguments = ModalRoute.of(context).settings.arguments as Map;
-      return new QuizScreen(questions: arguments['questions'], topic: arguments['topic']);
+      return new QuizScreen(
+        quizItems: arguments['quizItems'],
+        topic: arguments['topic'],
+      );
     },
     '/result': (BuildContext context) {
       final arguments = ModalRoute.of(context).settings.arguments as Map;
-      return new ResultScreen();
+      return new ResultScreen(
+        result: arguments['result'],
+        quizItems: arguments['quizItems'],
+        topic: arguments['topic'],
+      );
     },
   };
 
@@ -28,7 +35,6 @@ class Routes {
       title: 'Quiz App',
       routes: routes,
       debugShowCheckedModeBanner: false,
-      initialRoute: '/result',
     ));
   }
 }

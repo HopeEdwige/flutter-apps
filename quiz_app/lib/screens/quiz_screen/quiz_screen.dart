@@ -1,22 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:quiz_app/models/result.dart';
 
 import 'package:quiz_app/models/topic.dart';
-import 'package:quiz_app/models/question.dart';
+import 'package:quiz_app/models/quiz_item.dart';
 import 'package:quiz_app/util/color_utils.dart';
 
 import 'widgets/dot_indicator/index.dart';
 
 class QuizScreen extends StatefulWidget {
   final Topic topic;
-  final List<Question> questions;
+  final List<QuizItem> quizItems;
 
-  const QuizScreen({Key key, this.questions, this.topic}) : super(key: key);
+  const QuizScreen({Key key, @required this.quizItems, @required this.topic}) : super(key: key);
 
   @override
   QuizScreenState createState() => QuizScreenState();
 }
 
 class QuizScreenState extends State<QuizScreen> {
+  final DateTime _startTime = DateTime.now();
   int _currentQuestionIndex;
   int _currentSelectedAnswerIndex;
   List<int> _selectedAnswerIndexes;
@@ -35,7 +37,9 @@ class QuizScreenState extends State<QuizScreen> {
     final Size size = MediaQuery.of(context).size;
 
     final topicColor = widget.topic.iconColor;
-    final Question currentQuestion = widget.questions[_currentQuestionIndex];
+    final QuizItem currentQuestion = widget.quizItems[_currentQuestionIndex];
+
+    print('Choose number: ${currentQuestion.correctAnswerIndex + 1}');
 
     return WillPopScope(
       onWillPop: _handleOnWillPop,
@@ -70,11 +74,11 @@ class QuizScreenState extends State<QuizScreen> {
                     margin: const EdgeInsets.only(top: 8),
                   ),
                   SizedBox(
-                    height: 50,
+                    height: size.height / 20,
                   ),
                   DotIndicator(
                     position: _currentQuestionIndex,
-                    dotsCount: widget.questions.length,
+                    dotsCount: widget.quizItems.length,
                     lineColor: Colors.grey,
                     dotColor: Colors.grey[600],
                     completedDotColor: topicColor,
@@ -110,11 +114,12 @@ class QuizScreenState extends State<QuizScreen> {
                           itemCount: currentQuestion.answers.length,
                           separatorBuilder: (BuildContext context, int index) => SizedBox(height: size.height / 40),
                         ),
+                        SizedBox(height: size.height / 30),
                         MaterialButton(
                           minWidth: double.maxFinite,
                           disabledColor: Color(topicColor[700].hashCode).withAlpha(90),
                           color: topicColor[700],
-                          onPressed: _currentSelectedAnswerIndex == -1 ? null : () => _handleNextClick(),
+                          onPressed: _currentSelectedAnswerIndex == -1 ? null : () => _handleNextClick(context),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -146,15 +151,31 @@ class QuizScreenState extends State<QuizScreen> {
     });
   }
 
-  void _handleNextClick() {
-    if (_currentQuestionIndex < (widget.questions.length - 1)) {
+  void _handleNextClick(BuildContext context) {
+    if (_selectedAnswerIndexes.length < widget.quizItems.length) {
       setState(() {
         _selectedAnswerIndexes.add(_currentSelectedAnswerIndex);
-        _currentQuestionIndex = _currentQuestionIndex + 1;
-        _currentSelectedAnswerIndex = -1;
       });
-    } else {
-      print(_selectedAnswerIndexes);
+    }
+
+    if (_currentQuestionIndex < (widget.quizItems.length - 1)) {
+      setState(() {
+        _currentSelectedAnswerIndex = -1;
+        _currentQuestionIndex = _currentQuestionIndex + 1;
+      });
+    } else if (_selectedAnswerIndexes.length == widget.quizItems.length) {
+      Result result = Result.calculate(
+        _selectedAnswerIndexes,
+        widget.quizItems,
+        startTime: _startTime,
+        endTime: DateTime.now(),
+      );
+
+      Navigator.pushReplacementNamed(context, '/result', arguments: {
+        'result': result,
+        'topic': widget.topic,
+        'quizItems': widget.quizItems,
+      });
     }
   }
 
