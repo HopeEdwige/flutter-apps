@@ -11,7 +11,6 @@ Few common apps, built with flutter.
 - [X] [Quiz App](quiz_app)
 <img height="400" src="quiz_app/demo.gif"/>
 
-- [ ] Recipe App
 - [ ] Notes App
 - [ ] ToDo App
 - [ ] Movies App
@@ -19,3 +18,4 @@ Few common apps, built with flutter.
 - [ ] Drawing App
 - [ ] Password Generator
 - [ ] Weather App
+- [ ] [WhatsApp Status Saver](whatsapp_status_saver)
