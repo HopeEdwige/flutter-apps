@@ -2,6 +2,16 @@
 
 A new Flutter project.
 
+
+## Checklist
+- [ ] Add Logo
+- [ ] Handle permissions
+- [ ] Slide to refresh
+- [ ] Media player
+- [ ] Long press to multi select
+- [ ] Share selected to WhatsApp
+- [ ] Save selected media to phone
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
