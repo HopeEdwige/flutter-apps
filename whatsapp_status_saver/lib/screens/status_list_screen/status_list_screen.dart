@@ -19,15 +19,24 @@ class StatusListScreen extends StatefulWidget {
 }
 
 class StatusListScreenState extends State<StatusListScreen> {
-  bool _selectionMode;
+  bool _isLoading;
   List<String> _statusList;
+  Map<String, String> _thumbnails = new Map();
 
   @override
   void initState() {
     super.initState();
-
     _statusList = getStatusList(widget.statusType);
-    _selectionMode = Provider.of<SelectionModel>(context, listen: false).items.isNotEmpty;
+    _isLoading = widget.statusType == StatusType.video;
+
+    if (widget.statusType == StatusType.video) {
+      Future(() => _generateThumbs(_statusList)).then((value) {
+        setState(() {
+          _thumbnails = value;
+          _isLoading = false;
+        });
+      });
+    }
   }
 
   @override
@@ -44,7 +53,13 @@ class StatusListScreenState extends State<StatusListScreen> {
           staggeredTileBuilder: (int index) => new StaggeredTile.count(2, 2),
           itemBuilder: (BuildContext context, int index) => ClipRRect(
             borderRadius: BorderRadius.circular(10.0),
-            child: getGridTile(index),
+            child: _isLoading
+                ? Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : Tile(
+                    thumbnail: widget.statusType == StatusType.video ? _thumbnails[_statusList[index]] : _statusList[index],
+                  ),
           ),
         ),
       );
@@ -53,13 +68,34 @@ class StatusListScreenState extends State<StatusListScreen> {
     return Container();
   }
 
-  Widget getGridTile(int index) {
+  _generateThumbs(statusList) async {
+    Map<String, String> map = new Map();
+
+    for (var i = 0; i < _statusList.length; i++) {
+      final path = _statusList[i];
+      if (!_thumbnails.containsKey(path)) {
+        map[path] = await generateThumbnail(path);
+      }
+    }
+
+    return Future.value(map);
+  }
+}
+
+class Tile extends StatelessWidget {
+  final String thumbnail;
+  final StatusType statusType;
+
+  const Tile({this.statusType, this.thumbnail});
+
+  @override
+  Widget build(BuildContext context) {
     return Consumer<SelectionModel>(
       builder: (context, selection, child) {
-        final mediaPath = _statusList[index];
+        final mediaPath = thumbnail;
         final bool isSelected = selection.hasItem(mediaPath);
 
-        if (_selectionMode) {
+        if (selection.items.isNotEmpty) {
           return GridTile(
             header: GridTileBar(
               leading: Icon(
@@ -77,17 +113,11 @@ class StatusListScreenState extends State<StatusListScreen> {
                 ],
               ),
               onTap: () {
-                setState(() {
-                  if (selection.hasItem(mediaPath)) {
-                    selection.remove(mediaPath);
-                  } else {
-                    selection.add(new SelectedItem(path: mediaPath));
-                  }
-
-                  if (selection.items.isEmpty) {
-                    _selectionMode = false;
-                  }
-                });
+                if (selection.hasItem(mediaPath)) {
+                  selection.remove(mediaPath);
+                } else {
+                  selection.add(new SelectedItem(path: mediaPath));
+                }
               },
             ),
           );
@@ -97,10 +127,7 @@ class StatusListScreenState extends State<StatusListScreen> {
           child: InkResponse(
             child: _buildMediaListItem(mediaPath),
             onLongPress: () {
-              setState(() {
-                _selectionMode = true;
-                selection.add(new SelectedItem(path: mediaPath));
-              });
+              selection.add(new SelectedItem(path: mediaPath));
             },
           ),
         );
@@ -108,11 +135,10 @@ class StatusListScreenState extends State<StatusListScreen> {
     );
   }
 
-  Widget _buildMediaListItem(String mediaPath) {
-    if (widget.statusType == StatusType.image) {
-      return Image.file(File(mediaPath), fit: BoxFit.cover);
-    } else {
-      return Container(color: Colors.red);
-    }
+  Widget _buildMediaListItem([mediaPath]) {
+    return Hero(
+      tag: mediaPath,
+      child: Image.file(File(mediaPath), fit: BoxFit.cover),
+    );
   }
 }

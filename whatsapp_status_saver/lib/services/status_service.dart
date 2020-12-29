@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:thumbnails/thumbnails.dart';
 
 enum StatusType { image, video }
 
@@ -8,6 +9,15 @@ final Directory _rootDir = new Directory(_mediaPath);
 /// Checks if directory exists
 bool statusDirExists() {
   return _rootDir.existsSync();
+}
+
+/// Generates thumbnail for video statuses
+Future generateThumbnail(String video) async {
+  return await Thumbnails.getThumbnail(
+    videoFile: video,
+    imageType: ThumbFormat.PNG,
+    quality: 50,
+  );
 }
 
 /// Returns a list of paths for media files depending on the selected type
