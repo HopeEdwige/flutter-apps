@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:whatsapp_status_saver/models/selection_model.dart';
 
 import 'package:whatsapp_status_saver/screens/home_screen/index.dart';
 
@@ -52,7 +54,10 @@ class _AppState extends State<App> with WidgetsBindingObserver {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       // todo if status is PermissionStatus.permanentlyDenied, show button to open settings and change permissions.
-      home: _status == PermissionStatus.granted ? HomeScreen() : Container(),
+      home: ChangeNotifierProvider(
+        builder: (context) => SelectionModel(),
+        child: _status == PermissionStatus.granted ? HomeScreen() : Container(),
+      ),
       title: 'WhatsApp Status Saver',
       debugShowCheckedModeBanner: false,
     );
