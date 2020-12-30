@@ -1,24 +1,36 @@
 import 'dart:collection';
 import 'package:flutter/cupertino.dart';
-import 'package:whatsapp_status_saver/models/selected_item.dart';
+import 'package:whatsapp_status_saver/models/status_item.dart';
 
 class SelectionModel extends ChangeNotifier {
-  final List<SelectedItem> _items = [];
+  final List<StatusItem> _items = [];
 
-  UnmodifiableListView<SelectedItem> get items => UnmodifiableListView(_items);
+  UnmodifiableListView<StatusItem> get items => UnmodifiableListView(_items);
 
-  void add(SelectedItem item) {
+  get isEmpty => items.length == 0;
+
+  get isNotEmpty => items.length > 0;
+
+  bool hasItem(StatusItem item) {
+    return _items.indexWhere((e) => e.path == item.path) != -1;
+  }
+
+  void add(StatusItem item) {
     _items.add(item);
     notifyListeners();
   }
 
-  void remove(String path) {
-    _items.removeWhere((item) => item.path == path);
+  void remove(StatusItem item) {
+    _items.removeWhere((item) => item.path == item.path);
     notifyListeners();
   }
 
-  bool hasItem(String path) {
-    return _items.indexWhere((e) => e.path == path) != -1;
+  void toggle(StatusItem item) {
+    if (hasItem(item)) {
+      remove(item);
+    } else {
+      add(item);
+    }
   }
 
   void removeAll() {

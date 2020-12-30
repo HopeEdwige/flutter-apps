@@ -1,7 +1,8 @@
 import 'dart:io';
-import 'package:thumbnails/thumbnails.dart';
+import 'package:path/path.dart' as p;
 
-enum StatusType { image, video }
+import 'package:thumbnails/thumbnails.dart';
+import 'package:whatsapp_status_saver/models/status_item.dart';
 
 final String _mediaPath = '/storage/emulated/0/WhatsApp/Media/.Statuses';
 final Directory _rootDir = new Directory(_mediaPath);
@@ -12,16 +13,23 @@ bool statusDirExists() {
 }
 
 /// Generates thumbnail for video statuses
-Future generateThumbnail(String video) async {
-  return await Thumbnails.getThumbnail(
+Future generateThumbnail(String video) {
+  return Thumbnails.getThumbnail(
     videoFile: video,
     imageType: ThumbFormat.PNG,
     quality: 50,
   );
 }
 
-/// Returns a list of paths for media files depending on the selected type
-List<String> getStatusList(StatusType type) {
-  final String extension = type == StatusType.image ? '.jpg' : '.mp4';
-  return _rootDir.listSync().map((item) => item.path).where((item) => item.endsWith(extension)).toList(growable: false);
+/// Returns a list of paths for media files
+List<StatusItem> getStatusList() {
+  return _rootDir
+      .listSync()
+      .where((item) => item.path.endsWith('.jpg') || item.path.endsWith('.mp4'))
+      .map((item) => item.path)
+      .map((path) => new StatusItem(
+            path: path,
+            type: p.extension(path) == '.jpg' ? StatusType.image : StatusType.video,
+          ))
+      .toList(growable: false);
 }
