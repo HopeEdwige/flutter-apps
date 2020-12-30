@@ -121,6 +121,6 @@ class HomeScreenState extends State<HomeScreen> {
 
   Future<void> _handleRefresh() async {
     StatusModel statusModel = Provider.of<StatusModel>(context, listen: false);
-    Future.delayed(Duration(milliseconds: 3000), () => statusModel.fetch());
+    await Future.delayed(Duration(milliseconds: 1000), () => statusModel.fetch());
   }
 }
