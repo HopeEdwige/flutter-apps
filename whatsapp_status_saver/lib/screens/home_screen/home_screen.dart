@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 
 import 'package:whatsapp_status_saver/models/status_model.dart';
 import 'package:whatsapp_status_saver/models/selection_model.dart';
+import 'package:whatsapp_status_saver/screens/not_found_screen/index.dart';
 
 import 'package:whatsapp_status_saver/util/media_utils.dart';
 import 'package:whatsapp_status_saver/screens/status_list_screen/status_list_screen.dart';
@@ -19,13 +20,31 @@ class HomeScreen extends StatefulWidget {
 
 class HomeScreenState extends State<HomeScreen> {
   bool _isInitialized = false;
+  bool _isLoading = true;
 
   @override
   void didChangeDependencies() {
     StatusModel statusModel = Provider.of<StatusModel>(context);
 
     if (!this._isInitialized) {
-      Future.delayed(Duration.zero, () => statusModel.fetch());
+      Future.delayed(Duration.zero, () {
+        try {
+          statusModel.fetch();
+        } catch (e) {
+          print('[ERROR] HomeScreen => Failed to load status => $e}');
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) => NotFoundScreen(),
+            ),
+            (route) => false,
+          );
+        } finally {
+          setState(() {
+            _isLoading = false;
+          });
+        }
+      });
       this._isInitialized = true;
     }
 
@@ -42,45 +61,81 @@ class HomeScreenState extends State<HomeScreen> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        appBar: AppBar(
-          title: Text('WhatsApp Status Saver'),
-          backgroundColor: Colors.transparent,
-          bottom: TabBar(
-            tabs: [
-              _buildTabNavItem('Images'),
-              _buildTabNavItem('Videos'),
-            ],
-          ),
-          actions: hasSelection ? _buildActions(selectionModel) : null,
-        ),
-        body: TabBarView(
-          children: [
-            statusModel.images.isEmpty
-                ? Center(child: CircularProgressIndicator())
-                : Tab(
-                    child: StatusListScreen(
-                      statusList: statusModel.images,
-                      onRefresh: () => _handleRefresh(),
-                    ),
-                  ),
-            Tab(
-              child: StatusListScreen(
-                statusList: statusModel.videos,
-                onRefresh: () => _handleRefresh(),
-              ),
-            ),
-          ],
-        ),
+        appBar: _buildAppBar(hasSelection, selectionModel),
+        body: TabBarView(children: _buildTabViewItems(statusModel)),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: hasSelection ? _buildFloatingButton(selectionModel) : null,
       ),
     );
   }
 
-  Widget _buildTabNavItem(String title) {
+  AppBar _buildAppBar(bool hasSelection, SelectionModel selectionModel) {
+    if (hasSelection) {
+      return AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () => selectionModel.removeAll(),
+        ),
+        title: Text('${selectionModel.items.length} items selected'),
+        backgroundColor: Colors.transparent,
+        bottom: TabBar(
+          tabs: [
+            _buildTabNavItem('Images', selectionModel.images.length),
+            _buildTabNavItem('Videos', selectionModel.videos.length),
+          ],
+        ),
+        actions: _buildActions(selectionModel),
+      );
+    }
+
+    return AppBar(
+      title: Text('WhatsApp Status Saver'),
+      backgroundColor: Colors.transparent,
+      bottom: TabBar(
+        tabs: [
+          _buildTabNavItem('Images'),
+          _buildTabNavItem('Videos'),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTabNavItem(String title, [int selectedCount = 0]) {
+    final ThemeData theme = Theme.of(context);
+    EdgeInsets containerPadding = const EdgeInsets.symmetric(
+      vertical: 16.0,
+      horizontal: 8,
+    );
+    List<Widget> rowItems = [
+      Text(title.toUpperCase()),
+    ];
+
+    if (selectedCount != 0) {
+      containerPadding = const EdgeInsets.symmetric(
+        vertical: 10.0,
+        horizontal: 8,
+      );
+      rowItems.add(Container(
+        padding: const EdgeInsets.only(
+          left: 8,
+        ),
+        child: Container(
+          child: Text('$selectedCount'),
+          padding: const EdgeInsets.symmetric(
+            vertical: 6,
+            horizontal: 12,
+          ),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: theme.chipTheme.backgroundColor,
+          ),
+        ),
+      ));
+    }
+
     return Container(
-      child: Text(title.toUpperCase()),
-      padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 8),
+      padding: containerPadding,
+      child: Row(mainAxisAlignment: MainAxisAlignment.center, children: rowItems),
     );
   }
 
@@ -101,6 +156,45 @@ class HomeScreenState extends State<HomeScreen> {
           Toast.show('${selectionModel.items.length} downloaded successfully!', context, duration: 3);
         },
       ),
+    ];
+  }
+
+  List<Widget> _buildTabViewItems(StatusModel statusModel) {
+    if (_isLoading) {
+      return [
+        Center(child: CircularProgressIndicator()),
+        Center(child: CircularProgressIndicator()),
+      ];
+    }
+
+    final ThemeData theme = Theme.of(context);
+    return [
+      statusModel.images.isEmpty
+          ? Center(
+              child: Text(
+                'No image status found.',
+                style: theme.textTheme.subtitle1,
+              ),
+            )
+          : Tab(
+              child: StatusListScreen(
+                statusList: statusModel.images,
+                onRefresh: () => _handleRefresh(),
+              ),
+            ),
+      statusModel.videos.isEmpty
+          ? Center(
+              child: Text(
+                'No video status found.',
+                style: theme.textTheme.subtitle1,
+              ),
+            )
+          : Tab(
+              child: StatusListScreen(
+                statusList: statusModel.videos,
+                onRefresh: () => _handleRefresh(),
+              ),
+            ),
     ];
   }
 

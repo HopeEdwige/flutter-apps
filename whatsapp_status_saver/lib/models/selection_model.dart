@@ -6,6 +6,8 @@ class SelectionModel extends ChangeNotifier {
   final List<StatusItem> _items = [];
 
   UnmodifiableListView<StatusItem> get items => UnmodifiableListView(_items);
+  UnmodifiableListView<StatusItem> get videos => UnmodifiableListView(_items.where((item) => item.type == StatusType.video));
+  UnmodifiableListView<StatusItem> get images => UnmodifiableListView(_items.where((item) => item.type == StatusType.image));
 
   get isEmpty => items.length == 0;
 
@@ -21,7 +23,7 @@ class SelectionModel extends ChangeNotifier {
   }
 
   void remove(StatusItem item) {
-    _items.removeWhere((item) => item.path == item.path);
+    _items.removeWhere((e) => e.path == item.path);
     notifyListeners();
   }
 
