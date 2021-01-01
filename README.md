@@ -14,6 +14,8 @@ Few common apps, built with flutter.
 - [X] [WhatsApp Status Saver](whatsapp_status_saver)
 <img height="400" src="whatsapp_status_saver/demo.gif"/>
 
+- [ ] [Weight Tracking app](weight_tracker)
+
 - [ ] Notes App
 - [ ] ToDo App
 - [ ] Movies App
@@ -23,4 +25,3 @@ Few common apps, built with flutter.
 - [ ] ~~Weather App~~
 - [ ] Covid-19 tracker
 - [ ] BMI calculator
-- [ ] Weight Tracking app
