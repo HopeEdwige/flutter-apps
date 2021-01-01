@@ -1,3 +1,4 @@
+import 'package:path/path.dart' as p;
 import 'package:flutter/material.dart';
 import 'package:whatsapp_status_saver/services/status_service.dart';
 
@@ -7,6 +8,7 @@ class StatusItem {
   final String path;
   final StatusType type;
 
+  String title;
   bool isLoading = false;
   String thumbnailPath;
 
@@ -16,6 +18,7 @@ class StatusItem {
     isLoading,
     thumbnailPath,
   }) {
+    this.title = p.basename(this.path);
     this.thumbnailPath = thumbnailPath ?? this.path;
 
     if (this.type == StatusType.video) {
