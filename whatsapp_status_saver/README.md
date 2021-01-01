@@ -4,13 +4,16 @@ A new Flutter project.
 
 
 ## Checklist
-- [ ] Add Logo
-- [ ] Handle permissions
-- [ ] Slide to refresh
-- [ ] Media player
-- [ ] Long press to multi select
-- [ ] Share selected to WhatsApp
-- [ ] Save selected media to phone
+- [X] Handle permissions
+- [X] Swipe to refresh
+- [X] Video player
+- [X] Long press to multi select
+- [X] Long press when selecting to preview/play media
+- [X] Share selected items
+- [X] Download selected items to gallery
+
+## Demo
+<img src="demo.gif" preload/>
 
 ## Getting Started
 
