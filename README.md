@@ -21,3 +21,5 @@ Few common apps, built with flutter.
 - [ ] Drawing App
 - [ ] Password Generator
 - [ ] ~~Weather App~~
+- [ ] Covid-19 tracker
+- [ ] BMI calculator
