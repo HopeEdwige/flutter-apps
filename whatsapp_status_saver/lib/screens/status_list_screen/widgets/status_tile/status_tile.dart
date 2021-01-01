@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import 'package:whatsapp_status_saver/models/status_item.dart';
 import 'package:whatsapp_status_saver/models/selection_model.dart';
+import 'package:whatsapp_status_saver/screens/preview_screen/preview_screen.dart';
 
 class StatusTile extends StatelessWidget {
   final StatusItem statusItem;
@@ -34,6 +35,7 @@ class StatusTile extends StatelessWidget {
                 ],
               ),
               onTap: () => selection.toggle(statusItem),
+              onLongPress: () => _handlePreview(context),
             ),
           );
         }
@@ -42,6 +44,7 @@ class StatusTile extends StatelessWidget {
           child: InkResponse(
             child: _buildMediaListItem(statusItem.thumbnailPath),
             onLongPress: () => selection.add(statusItem),
+            onTap: () => _handlePreview(context),
           ),
         );
       },
@@ -52,6 +55,13 @@ class StatusTile extends StatelessWidget {
     return Hero(
       tag: mediaPath,
       child: Image.file(File(mediaPath), fit: BoxFit.cover),
+    );
+  }
+
+  void _handlePreview(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => PreviewScreen(item: statusItem)),
     );
   }
 }
