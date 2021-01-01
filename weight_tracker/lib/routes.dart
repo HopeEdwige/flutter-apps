@@ -4,10 +4,8 @@ import 'package:weight_tracker/util/theme_utils.dart';
 import 'package:weight_tracker/screens/home_screen/index.dart';
 
 class Routes {
-  final routes = <String, WidgetBuilder>{};
-
-  Routes() {
-    runApp(new MaterialApp(
+  static getApp() {
+    return new MaterialApp(
       title: 'Weight Tracker',
       debugShowCheckedModeBanner: false,
       onGenerateRoute: (RouteSettings settings) {
@@ -30,6 +28,10 @@ class Routes {
         backgroundColor: Color.fromRGBO(22, 24, 36, 1),
         scaffoldBackgroundColor: Color.fromRGBO(22, 24, 36, 1),
       ),
-    ));
+    );
+  }
+
+  Routes() {
+    runApp(getApp());
   }
 }
