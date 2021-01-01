@@ -57,14 +57,22 @@ class HomeScreenState extends State<HomeScreen> {
     SelectionModel selectionModel = Provider.of<SelectionModel>(context);
     bool hasSelection = selectionModel.isNotEmpty;
 
-    // todo check if WhatsApp doesn't exist and display error screen
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        appBar: _buildAppBar(hasSelection, selectionModel),
-        body: TabBarView(children: _buildTabViewItems(statusModel)),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: hasSelection ? _buildFloatingButton(selectionModel) : null,
+    return WillPopScope(
+      onWillPop: () {
+        if (selectionModel.isNotEmpty) {
+          selectionModel.removeAll();
+          return Future.value(false);
+        }
+        return Future.value(true);
+      },
+      child: DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          appBar: _buildAppBar(hasSelection, selectionModel),
+          body: TabBarView(children: _buildTabViewItems(statusModel)),
+          floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+          floatingActionButton: hasSelection ? _buildFloatingButton(selectionModel) : null,
+        ),
       ),
     );
   }
