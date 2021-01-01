@@ -23,3 +23,4 @@ Few common apps, built with flutter.
 - [ ] ~~Weather App~~
 - [ ] Covid-19 tracker
 - [ ] BMI calculator
+- [ ] Weight Tracking app
