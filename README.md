@@ -17,7 +17,10 @@ Few common apps, built with flutter.
 - [ ] Notes App
 - [ ] ToDo App
 - [ ] Movies App
-- [ ] GitHub Profiles
+- [ ] ~~GitHub Profiles~~
 - [ ] Drawing App
 - [ ] Password Generator
-- [ ] Weather App
+- [ ] ~~Weather App~~
+- [ ] Covid-19 tracker
+- [ ] BMI calculator
+- [ ] Weight Tracking app
