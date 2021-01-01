@@ -159,9 +159,14 @@ class HomeScreenState extends State<HomeScreen> {
       IconButton(
         icon: Icon(Icons.download_rounded),
         onPressed: () async {
-          await downloadSelectedItems(selectionModel.items);
-          selectionModel.removeAll();
-          Toast.show('${selectionModel.items.length} downloaded successfully!', context, duration: 3);
+          try {
+            await downloadSelectedItems(selectionModel.items);
+            Toast.show('${selectionModel.items.length} downloaded successfully!', context, duration: 3);
+          } catch (e) {
+            Toast.show('Failed to download, please refresh and try again!', context, duration: 3);
+          } finally {
+            selectionModel.removeAll();
+          }
         },
       ),
     ];

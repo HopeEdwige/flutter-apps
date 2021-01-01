@@ -77,42 +77,49 @@ class PreviewScreenState extends State<PreviewScreen> {
   }
 
   Widget _buildVideoPlayer() {
-    return Stack(
-      children: [
-        AspectRatio(
-          aspectRatio: _videoPlayerController.value.aspectRatio,
-          child: VideoPlayer(_videoPlayerController),
-        ),
-        Positioned(
-          child: Align(
-            alignment: Alignment.center,
-            child: MaterialButton(
-              color: Colors.blue,
-              textColor: Colors.white,
-              padding: const EdgeInsets.all(20),
-              shape: CircleBorder(),
-              child: Icon(
-                _videoPlayerController.value.isPlaying ? Icons.pause : Icons.play_arrow,
-                size: 35,
-              ),
-              onPressed: () {
-                setState(() {
-                  if (_videoPlayerController.value.isPlaying) {
-                    _videoPlayerController.pause();
-                  } else {
-                    print('Value => ${_videoPlayerController.value.position}');
-                    print('Duration => ${_videoPlayerController.value.duration}');
-                    if (_videoPlayerController.value.position == _videoPlayerController.value.duration) {
-                      _videoPlayerController.seekTo(Duration.zero);
-                    }
-                    _videoPlayerController.play();
-                  }
-                });
-              },
-            ),
+    ThemeData theme = Theme.of(context);
+    return GestureDetector(
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          AspectRatio(
+            aspectRatio: _videoPlayerController.value.aspectRatio,
+            child: VideoPlayer(_videoPlayerController),
           ),
-        )
-      ],
+          Positioned(
+            child: Align(
+              alignment: Alignment.center,
+              child: _videoPlayerController.value.isPlaying
+                  ? null
+                  : Container(
+                      padding: const EdgeInsets.all(20),
+                      child: Icon(
+                        Icons.play_arrow,
+                        size: 35,
+                        color: theme.textTheme.bodyText1.color,
+                      ),
+                      decoration: BoxDecoration(
+                        color: theme.backgroundColor.withOpacity(.5),
+                        borderRadius: BorderRadius.all(Radius.circular(100)),
+                      ),
+                    ),
+            ),
+          )
+        ],
+      ),
+      onTap: () {
+        setState(() {
+          VideoPlayerValue value = _videoPlayerController.value;
+          if (value.isPlaying) {
+            _videoPlayerController.pause();
+          } else {
+            if (value.position == value.duration) {
+              _videoPlayerController.seekTo(Duration.zero);
+            }
+            _videoPlayerController.play();
+          }
+        });
+      },
     );
   }
 }
