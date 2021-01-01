@@ -5,13 +5,13 @@ A new Flutter project.
 
 ## Checklist
 
+- [ ] Intro page asking for weight name, age, height, target weight.
+    - [ ] Steps with slide and fade animation
+    - [ ] Name input.
+    - [ ] Gender scale.
+    - [ ] Height scale.
+    - [ ] Weight Scale.
 - [ ] Home Page
-    - [ ] Intro page asking for weight name, age, height, target weight.
-        - [ ] Steps with slide and fade animation
-        - [ ] Name input.
-        - [ ] Gender scale.
-        - [ ] Height scale.
-        - [ ] Weight Scale.
     - [ ] Time Series Chart displaying weight over days / months.
         - [ ] Option to switch range (this month, 6 month, etc.)
     - [ ] Weight progress .
