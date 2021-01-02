@@ -27,6 +27,7 @@ dependencies:
   path_provider:
   provider: ^2.0.0
   percent_indicator: ^2.1.7+2
+  fl_chart: ^0.12.2
 
 
   # The following adds the Cupertino Icons font to your application.

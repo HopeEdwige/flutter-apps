@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:fl_chart/fl_chart.dart';
+
 import 'package:weight_tracker/auth.dart';
-import 'package:weight_tracker/models/session.dart';
 import 'package:weight_tracker/models/user.dart';
+import 'package:weight_tracker/models/session.dart';
+import 'package:weight_tracker/screens/home/widgets/chart/index.dart';
 import 'package:weight_tracker/screens/home/widgets/header/index.dart';
-import 'package:weight_tracker/screens/home/widgets/weight_progress/index.dart';
+import 'package:weight_tracker/screens/home/widgets/progress/index.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -51,9 +54,10 @@ class _HomeScreenState extends State<HomeScreen> implements AuthStateListener {
               builder: (context, session, child) => Column(
                 children: <Widget>[
                   Header(name: session.user?.name),
+                  Chart(),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 14),
-                    child: WeightProgress(
+                    child: Progress(
                       current: 85,
                       target: session.user?.targetWeight,
                       initial: session.user?.initialWeight,

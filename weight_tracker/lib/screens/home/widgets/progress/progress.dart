@@ -3,12 +3,12 @@ import 'package:percent_indicator/percent_indicator.dart';
 
 const sheetPadding = 50;
 
-class WeightProgress extends StatelessWidget {
+class Progress extends StatelessWidget {
   final double target;
   final double current;
   final double initial;
 
-  WeightProgress({Key key, this.target, this.current, this.initial}) : super(key: key);
+  Progress({Key key, this.target, this.current, this.initial}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
