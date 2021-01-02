@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:weight_tracker/models/session.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -16,15 +18,20 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'Hello world!',
-              style: theme.textTheme.headline4,
-            ),
-          ],
+          children: <Widget>[Header()],
         ),
       ),
+    );
+  }
+}
+
+class Header extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<Session>(
+      builder: (context, session, child) {
+        return Text(session.user.name);
+      },
     );
   }
 }
