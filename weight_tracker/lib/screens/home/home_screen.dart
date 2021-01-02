@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:weight_tracker/auth.dart';
 import 'package:weight_tracker/models/session.dart';
@@ -41,21 +42,26 @@ class _HomeScreenState extends State<HomeScreen> implements AuthStateListener {
     }
 
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 8),
-          child: Column(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                child: Header(),
+      body: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle.light,
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 18),
+            child: Consumer<Session>(
+              builder: (context, session, child) => Column(
+                children: <Widget>[
+                  Header(name: session.user?.name),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    child: WeightProgress(
+                      current: 85,
+                      target: session.user?.targetWeight,
+                      initial: session.user?.initialWeight,
+                    ),
+                  ),
+                ],
               ),
-              WeightProgress(
-                target: 10.0,
-                current: 70.0,
-                initial: 100.0,
-              ),
-            ],
+            ),
           ),
         ),
       ),

@@ -3,19 +3,20 @@ import 'package:provider/provider.dart';
 import 'package:weight_tracker/models/session.dart';
 
 class Header extends StatelessWidget {
+  final String name;
+
+  Header({Key key, this.name}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    return Consumer<Session>(
-      builder: (context, session, child) {
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text('Welcome ${session.user.name},', style: theme.textTheme.headline5.copyWith(fontWeight: FontWeight.w500)),
-            // todo nav/share
-          ],
-        );
-      },
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text('Welcome $name,', style: theme.textTheme.headline5.copyWith(fontWeight: FontWeight.w500)),
+        // todo nav/share
+      ],
     );
   }
 }

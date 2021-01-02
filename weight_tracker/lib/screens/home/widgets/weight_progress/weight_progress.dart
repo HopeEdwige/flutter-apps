@@ -17,47 +17,29 @@ class WeightProgress extends StatelessWidget {
     double percent = calculatePercentage(initial, current, target);
 
     return Container(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 14),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text.rich(TextSpan(
-                  text: initial.toString(),
-                  style: TextStyle(
-                    color: theme.textTheme.bodyText2.color,
-                    fontSize: theme.textTheme.headline5.fontSize,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  children: [TextSpan(text: 'kg', style: TextStyle(fontSize: theme.textTheme.subtitle1.fontSize))],
-                )),
-                Text.rich(TextSpan(
-                  text: current.toString(),
-                  style: TextStyle(
-                    color: theme.textTheme.headline5.color,
-                    fontSize: theme.textTheme.headline2.fontSize,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  children: [TextSpan(text: 'kg', style: TextStyle(fontSize: 20))],
-                )),
-                Text.rich(TextSpan(
-                  text: target.toString(),
-                  style: TextStyle(
-                    color: theme.textTheme.bodyText2.color,
-                    fontSize: theme.textTheme.headline5.fontSize,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  children: [TextSpan(text: 'kg', style: TextStyle(fontSize: theme.textTheme.subtitle1.fontSize))],
-                )),
-              ],
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            LinearPercentIndicator(
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              _buildWeightMeasure(theme, initial.toString()),
+              _buildWeightMeasure(
+                theme,
+                current.toString(),
+                color: theme.textTheme.headline5.color,
+                fontSize: theme.textTheme.headline2.fontSize,
+                measureFontSize: 20,
+              ),
+              _buildWeightMeasure(theme, target.toString()),
+            ],
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          SizedBox(
+            height: 3,
+            child: LinearPercentIndicator(
               lineHeight: 3,
               percent: percent,
               animation: true,
@@ -67,14 +49,32 @@ class WeightProgress extends StatelessWidget {
               backgroundColor: theme.cardColor,
               progressColor: theme.colorScheme.primary,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
+  Widget _buildWeightMeasure(ThemeData theme, String value, {double fontSize, Color color, double measureFontSize}) {
+    color = color ?? theme.textTheme.bodyText2.color;
+    fontSize = fontSize ?? theme.textTheme.headline5.fontSize;
+    measureFontSize = measureFontSize ?? theme.textTheme.subtitle1.fontSize;
+
+    return Text.rich(TextSpan(
+      text: value,
+      style: TextStyle(
+        color: color,
+        fontSize: fontSize,
+        fontWeight: FontWeight.bold,
+      ),
+      children: [TextSpan(text: 'kg', style: TextStyle(fontSize: measureFontSize))],
+    ));
+  }
+
   double calculatePercentage(double initial, double current, double target) {
-    //todo
-    return .3;
+    double totalTime = target - initial;
+    double progress = current - initial;
+    double percentage = ((progress / totalTime) * 100).clamp(0.0, 100.0);
+    return percentage / 100;
   }
 }
