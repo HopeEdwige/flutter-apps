@@ -43,6 +43,8 @@ For help getting started with Flutter, view our
 samples, guidance on mobile development, and a full API reference.
 
 
-## References
+## References/Resources
 - UX design by [Lena Timoshenko](https://dribbble.com/Lorem).
-- Sliders by [Marcin Szałek](https://github.com/MarcinusX).
+- Sliders design/idea by [Marcin Szałek](https://github.com/MarcinusX).
+- People vector created by [freepik](https://www.freepik.com/vectors/people) - www.freepik.com
+- Toggle Switch inspiration from [PramodJoshi/toggle_switch](https://github.com/PramodJoshi/toggle_switch/blob/master/lib/toggle_switch.dart)
