@@ -21,17 +21,18 @@ class App extends StatelessWidget {
       child: MaterialApp(
         routes: Routes.list,
         title: 'Weight Tracker',
-        initialRoute: '/sign-up',
+        initialRoute: Routes.defaultRoute,
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           brightness: Brightness.dark,
           visualDensity: VisualDensity.adaptivePlatformDensity,
-
-          //theme
-          primarySwatch: createMaterialColor(Color.fromRGBO(26, 255, 213, 1)),
+          textTheme: TextTheme(
+            bodyText2: TextStyle(color: Color.fromRGBO(138, 139, 150, 1)),
+          ),
           cardColor: Color.fromRGBO(32, 33, 55, 1),
-          backgroundColor: Color.fromRGBO(22, 24, 36, 1),
-          scaffoldBackgroundColor: Color.fromRGBO(22, 24, 36, 1),
+          backgroundColor: Color.fromRGBO(22, 24, 46, 1),
+          scaffoldBackgroundColor: Color.fromRGBO(22, 24, 46, 1),
+          primarySwatch: createMaterialColor(Color.fromRGBO(26, 255, 213, 1)),
         ),
       ),
     );

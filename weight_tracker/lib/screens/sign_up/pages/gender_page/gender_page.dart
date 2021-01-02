@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:weight_tracker/models/gender.dart';
-import 'package:weight_tracker/screens/signup_screen/widgets/gender_selector/gender_selector.dart';
+import 'package:weight_tracker/screens/sign_up/widgets/gender_selector/gender_selector.dart';
 
 class GenderPage extends StatefulWidget {
   final Gender initialSelected;
