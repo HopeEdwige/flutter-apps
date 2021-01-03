@@ -11,7 +11,7 @@ class Chart extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      height: 200,
+      height: 180,
       child: LineChart(
         _buildChartData(),
       ),
@@ -64,7 +64,7 @@ class Chart extends StatelessWidget {
       minX: 0,
       maxX: 11,
       minY: 0,
-      maxY: 7,
+      maxY: 5.5,
       lineBarsData: [
         LineChartBarData(
           spots: [

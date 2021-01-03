@@ -40,10 +40,8 @@ class History extends StatelessWidget {
             height: 10,
           ),
           Container(
-            height: MediaQuery.of(context).size.height / 5.4,
-            child: ListView.builder(
-              itemBuilder: (context, index) {
-                Weight item = historyItems[index];
+            child: Column(
+              children: historyItems.map((item) {
                 return Card(
                     child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 18.0, horizontal: 24),
@@ -59,8 +57,7 @@ class History extends StatelessWidget {
                     ],
                   ),
                 ));
-              },
-              itemCount: historyItems.length,
+              }).toList(),
             ),
           )
         ],

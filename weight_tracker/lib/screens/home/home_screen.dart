@@ -33,6 +33,9 @@ class _HomeScreenState extends State<HomeScreen> implements AuthStateListener {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    final Size size = MediaQuery.of(context).size;
+
     bool isReady = authStateProvider.ready;
     double currentWeight = 85.30;
 
@@ -46,18 +49,30 @@ class _HomeScreenState extends State<HomeScreen> implements AuthStateListener {
     }
 
     return Scaffold(
-      body: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.light,
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 18),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(kToolbarHeight),
+        child: AppBar(
+          centerTitle: false,
+          automaticallyImplyLeading: false,
+          title: Padding(
+            padding: const EdgeInsets.only(left: 8.0),
             child: Consumer<Session>(
-              builder: (context, session, child) => Column(
+              builder: (context, session, child) => Header(name: session.user?.name),
+            ),
+          ),
+          backgroundColor: theme.scaffoldBackgroundColor,
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 25),
+        child: Stack(
+          children: [
+            Consumer<Session>(
+              builder: (context, session, child) => ListView(
                 children: <Widget>[
-                  Header(name: session.user?.name),
                   Chart(),
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    padding: const EdgeInsets.symmetric(vertical: 12),
                     child: Progress(
                       current: 78.4,
                       target: session.user?.targetWeight,
@@ -65,35 +80,55 @@ class _HomeScreenState extends State<HomeScreen> implements AuthStateListener {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    padding: const EdgeInsets.symmetric(vertical: 12),
                     child: BMICalculator(
                       currentWeight: currentWeight,
                       user: session.user,
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    padding: const EdgeInsets.only(bottom: 80),
                     child: History(),
                   ),
                 ],
               ),
             ),
-          ),
+            Positioned(
+              height: 100,
+              width: size.width,
+              top: (size.height - kToolbarHeight) / 1.17,
+              child: new Container(
+                height: 80.0,
+                decoration: new BoxDecoration(
+                  gradient: new LinearGradient(
+                    begin: const Alignment(0.0, -1.0),
+                    end: const Alignment(0.0, 0.2),
+                    colors: <Color>[
+                      theme.colorScheme.background.withOpacity(.2),
+                      theme.colorScheme.background.withOpacity(.4),
+                      theme.colorScheme.background.withOpacity(.8),
+                      // Colors.red,
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      // floatingActionButton: Container(
-      //   margin: const EdgeInsets.only(bottom: 20),
-      //   width: MediaQuery.of(context).size.width / 1.5,
-      //   height: 55,
-      //   child: FloatingActionButton.extended(
-      //     onPressed: () {},
-      //     label: Text(
-      //       'NEW WEIGHT',
-      //       style: TextStyle(fontWeight: FontWeight.bold),
-      //     ),
-      //   ),
-      // ),
+      floatingActionButton: Container(
+        margin: const EdgeInsets.only(bottom: 0),
+        width: MediaQuery.of(context).size.width / 1.5,
+        height: 55,
+        child: FloatingActionButton.extended(
+          onPressed: () {},
+          label: Text(
+            'NEW WEIGHT',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+        ),
+      ),
     );
   }
 }
