@@ -5,10 +5,11 @@ import 'package:provider/provider.dart';
 import 'package:weight_tracker/auth.dart';
 import 'package:weight_tracker/models/user.dart';
 import 'package:weight_tracker/models/session.dart';
-import 'package:weight_tracker/screens/home/widgets/bmi_calculator/index.dart';
 import 'package:weight_tracker/screens/home/widgets/chart/index.dart';
 import 'package:weight_tracker/screens/home/widgets/header/index.dart';
+import 'package:weight_tracker/screens/home/widgets/history/index.dart';
 import 'package:weight_tracker/screens/home/widgets/progress/index.dart';
+import 'package:weight_tracker/screens/home/widgets/bmi_calculator/index.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -58,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> implements AuthStateListener {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     child: Progress(
-                      current: 85,
+                      current: 78.4,
                       target: session.user?.targetWeight,
                       initial: session.user?.initialWeight,
                     ),
@@ -70,6 +71,10 @@ class _HomeScreenState extends State<HomeScreen> implements AuthStateListener {
                       user: session.user,
                     ),
                   ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    child: History(),
+                  ),
                 ],
               ),
             ),
@@ -77,18 +82,18 @@ class _HomeScreenState extends State<HomeScreen> implements AuthStateListener {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: Container(
-        margin: const EdgeInsets.only(bottom: 20),
-        width: MediaQuery.of(context).size.width / 1.5,
-        height: 55,
-        child: FloatingActionButton.extended(
-          onPressed: () {},
-          label: Text(
-            'NEW WEIGHT',
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-        ),
-      ),
+      // floatingActionButton: Container(
+      //   margin: const EdgeInsets.only(bottom: 20),
+      //   width: MediaQuery.of(context).size.width / 1.5,
+      //   height: 55,
+      //   child: FloatingActionButton.extended(
+      //     onPressed: () {},
+      //     label: Text(
+      //       'NEW WEIGHT',
+      //       style: TextStyle(fontWeight: FontWeight.bold),
+      //     ),
+      //   ),
+      // ),
     );
   }
 }

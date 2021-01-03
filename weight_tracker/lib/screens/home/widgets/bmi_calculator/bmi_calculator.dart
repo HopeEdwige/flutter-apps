@@ -53,7 +53,7 @@ class BMICalculator extends StatelessWidget {
                         ),
                       ),
                       SizedBox(
-                        width: 5,
+                        width: 8,
                       ),
                       Text(
                         'YOU\'RE HEALTHY',

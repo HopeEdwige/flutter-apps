@@ -36,7 +36,10 @@ class BMIGraph extends StatelessWidget {
               child: Text('30'),
             ),
             Expanded(
-              child: Text('40'),
+              child: Text(
+                '40',
+                textAlign: TextAlign.right,
+              ),
             ),
           ],
         )

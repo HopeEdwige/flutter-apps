@@ -1,7 +1,10 @@
-abstract class Weight {
-  int id;
+enum WeightDifferenceType { DECREASED, INCREASED, SAME }
 
-  static fromMap() {}
+class Weight {
+  final double value;
+  final int timestamp;
+  final double difference;
+  final WeightDifferenceType differenceType;
 
-  toMap() {}
+  const Weight({this.value, this.timestamp, this.difference, this.differenceType});
 }
