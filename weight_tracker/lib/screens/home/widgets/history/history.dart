@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:weight_tracker/models/weight.dart';
-
-List historyItems = [
-  Weight(value: 62.5, timestamp: null, difference: 0.5, differenceType: WeightDifferenceType.INCREASED),
-  Weight(value: 62.0, timestamp: null, difference: 0.8, differenceType: WeightDifferenceType.DECREASED),
-  Weight(value: 61.2, timestamp: null, difference: 0.3, differenceType: WeightDifferenceType.DECREASED),
-];
+import 'package:weight_tracker/widgets/history_list/history_list.dart';
 
 class History extends StatelessWidget {
   @override
@@ -39,27 +34,15 @@ class History extends StatelessWidget {
           SizedBox(
             height: 10,
           ),
-          Container(
-            child: Column(
-              children: historyItems.map((item) {
-                return Card(
-                    child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 18.0, horizontal: 24),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        children: [Text('Today'), Text('${item.difference} kg')],
-                      ),
-                      Column(
-                        children: [Text('${item.value} kg')],
-                      )
-                    ],
-                  ),
-                ));
-              }).toList(),
-            ),
-          )
+          HistoryList(
+            items: [
+              Weight(value: 62.5, timestamp: null, difference: 0.5, differenceType: WeightDifferenceType.INCREASED),
+              Weight(value: 62.0, timestamp: null, difference: 0.8, differenceType: WeightDifferenceType.DECREASED),
+              Weight(value: 61.2, timestamp: null, difference: 0.3, differenceType: WeightDifferenceType.DECREASED),
+              Weight(value: 59.2, timestamp: null, difference: 1.0, differenceType: WeightDifferenceType.SAME),
+              Weight(value: 59.2, timestamp: null, difference: 1.0, differenceType: WeightDifferenceType.INCREASED),
+            ],
+          ),
         ],
       ),
     );
