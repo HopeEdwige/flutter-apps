@@ -54,13 +54,22 @@ class _HomeScreenState extends State<HomeScreen> implements AuthStateListener {
         child: AppBar(
           centerTitle: false,
           automaticallyImplyLeading: false,
+          backgroundColor: theme.scaffoldBackgroundColor,
+          actions: [
+            IconButton(
+                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
+                icon: Icon(
+                  Icons.refresh,
+                  size: 28,
+                ),
+                onPressed: () {})
+          ],
           title: Padding(
             padding: const EdgeInsets.only(left: 8.0),
             child: Consumer<Session>(
               builder: (context, session, child) => Header(name: session.user?.name),
             ),
           ),
-          backgroundColor: theme.scaffoldBackgroundColor,
         ),
       ),
       body: Padding(
@@ -82,8 +91,9 @@ class _HomeScreenState extends State<HomeScreen> implements AuthStateListener {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     child: BMICalculator(
-                      currentWeight: currentWeight,
                       user: session.user,
+                      currentWeight: currentWeight,
+                      graphWidth: size.width - 325,
                     ),
                   ),
                   Padding(
@@ -125,7 +135,7 @@ class _HomeScreenState extends State<HomeScreen> implements AuthStateListener {
           onPressed: () {},
           label: Text(
             'NEW WEIGHT',
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
           ),
         ),
       ),

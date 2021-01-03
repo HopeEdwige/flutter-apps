@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:weight_tracker/util/list_utils.dart';
 
 class BMIGraph extends StatelessWidget {
+  final double graphWidth;
   final double currentValue;
+  final double lineGap = 4.1;
 
-  const BMIGraph({Key key, this.currentValue = 0}) : super(key: key);
+  const BMIGraph({Key key, this.graphWidth = 100, this.currentValue = 0})
+      : assert(graphWidth != null),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -12,42 +16,52 @@ class BMIGraph extends StatelessWidget {
     final double endValue = 40;
     final ThemeData theme = Theme.of(context);
     final List<double> graphItems = range(startValue, endValue, step: .5);
-    final List<Widget> graph = graphItems.map((v) => _buildGraphItem(v, startValue, theme)).toList();
+    final List<Widget> graph = graphItems
+        .map((v) => _buildGraphItem(
+              v,
+              startValue,
+              ((graphWidth + lineGap) / graphItems.length),
+              theme,
+            ))
+        .toList();
 
-    return Column(
-      children: [
-        Row(children: graph),
-        Row(
-          children: [
-            Expanded(
-              flex: 2,
-              child: Text('15'),
-            ),
-            Expanded(
-              flex: 3,
-              child: Text('18.5'),
-            ),
-            Expanded(
-              flex: 2,
-              child: Text('25'),
-            ),
-            Expanded(
-              flex: 4,
-              child: Text('30'),
-            ),
-            Expanded(
-              child: Text(
-                '40',
-                textAlign: TextAlign.right,
+    return Container(
+      width: graphWidth,
+      child: Column(
+        children: [
+          Row(children: graph),
+          Row(
+            children: [
+              Expanded(
+                flex: 2,
+                child: Text('15'),
               ),
-            ),
-          ],
-        )
-      ],
+              Expanded(
+                flex: 3,
+                child: Text('18.5'),
+              ),
+              Expanded(
+                flex: 2,
+                child: Text('25'),
+              ),
+              Expanded(
+                flex: 4,
+                child: Text('30'),
+              ),
+              Expanded(
+                child: Text(
+                  '40',
+                  textAlign: TextAlign.right,
+                ),
+              ),
+            ],
+          )
+        ],
+      ),
     );
   }
 
-  Widget _buildGraphItem(double value, double startValue, ThemeData theme) {
+  Widget _buildGraphItem(double value, double startValue, double width, ThemeData theme) {
     Color color = Colors.blueAccent;
 
     if (value < 18.5) {
@@ -61,10 +75,10 @@ class BMIGraph extends StatelessWidget {
     }
     return Container(
       color: color,
-      width: 2,
+      width: width,
       height: currentValue == value ? 35 : 25,
       padding: EdgeInsets.symmetric(vertical: 0),
-      margin: EdgeInsets.only(left: value != startValue ? 4.1 : 0),
+      margin: EdgeInsets.only(left: value != startValue ? lineGap : 0),
     );
   }
 }

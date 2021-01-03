@@ -9,23 +9,31 @@ class Chart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return SizedBox(
-      width: double.infinity,
       height: 180,
       child: LineChart(
-        _buildChartData(),
+        _buildChartData(size: size, barData: _buildLineChartBarData()),
       ),
     );
   }
 
-  _buildChartData() {
+  _buildChartData({Size size, LineChartBarData barData}) {
+    const double margin = 10;
+    const double fontSize = 15;
+    const textStyles = const TextStyle(color: Color(0xff68737d), fontSize: fontSize);
+
+    // random fraction size :)
+    int ratio = (size.aspectRatio * 100).toInt();
+    double reverseSizeX = ((ratio * 5) + size.width) / 13;
+
     return LineChartData(
       gridData: FlGridData(show: false),
       titlesData: FlTitlesData(
         show: true,
         bottomTitles: SideTitles(
           showTitles: true,
-          getTextStyles: (value) => const TextStyle(color: Color(0xff68737d), fontSize: 15),
+          getTextStyles: (value) => textStyles,
           getTitles: (value) {
             switch (value.toInt()) {
               case 2:
@@ -37,14 +45,11 @@ class Chart extends StatelessWidget {
             }
             return '';
           },
-          margin: 15,
+          margin: margin,
         ),
         leftTitles: SideTitles(
           showTitles: true,
-          getTextStyles: (value) => const TextStyle(
-            color: Color(0xff67727d),
-            fontSize: 15,
-          ),
+          getTextStyles: (value) => textStyles,
           getTitles: (value) {
             switch (value.toInt()) {
               case 1:
@@ -56,8 +61,8 @@ class Chart extends StatelessWidget {
             }
             return '';
           },
-          reservedSize: 50,
-          margin: 15,
+          reservedSize: reverseSizeX,
+          margin: margin,
         ),
       ),
       borderData: FlBorderData(show: false),
@@ -65,28 +70,30 @@ class Chart extends StatelessWidget {
       maxX: 11,
       minY: 0,
       maxY: 5.5,
-      lineBarsData: [
-        LineChartBarData(
-          spots: [
-            FlSpot(0, 3),
-            FlSpot(2.6, 2),
-            FlSpot(4.9, 5),
-            FlSpot(6.8, 3.1),
-            FlSpot(8, 4),
-            FlSpot(9.5, 3),
-            FlSpot(11, 4),
-          ],
-          isCurved: true,
-          colors: gradientColors,
-          barWidth: 2,
-          isStrokeCapRound: true,
-          dotData: FlDotData(show: false),
-          belowBarData: BarAreaData(
-            show: true,
-            colors: gradientColors.map((color) => color.withOpacity(0.1)).toList(),
-          ),
-        ),
+      lineBarsData: [barData],
+    );
+  }
+
+  _buildLineChartBarData() {
+    return LineChartBarData(
+      spots: [
+        FlSpot(0, 3),
+        FlSpot(2.6, 2),
+        FlSpot(4.9, 5),
+        FlSpot(6.8, 3.1),
+        FlSpot(8, 4),
+        FlSpot(9.5, 3),
+        FlSpot(11, 4),
       ],
+      isCurved: true,
+      colors: gradientColors,
+      barWidth: 2,
+      isStrokeCapRound: true,
+      dotData: FlDotData(show: false),
+      belowBarData: BarAreaData(
+        show: true,
+        colors: gradientColors.map((color) => color.withOpacity(0.1)).toList(),
+      ),
     );
   }
 }

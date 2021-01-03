@@ -5,10 +5,11 @@ import 'package:weight_tracker/models/user.dart';
 import 'package:weight_tracker/screens/home/widgets/bmi_graph/bmi_graph.dart';
 
 class BMICalculator extends StatelessWidget {
-  final double currentWeight;
   final User user;
+  final double graphWidth;
+  final double currentWeight;
 
-  BMICalculator({Key key, @required this.user, @required this.currentWeight}) : super(key: key);
+  BMICalculator({Key key, @required this.user, @required this.currentWeight, this.graphWidth}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +69,7 @@ class BMICalculator extends StatelessWidget {
                   Container(
                     margin: EdgeInsets.only(top: 10),
                     width: double.infinity,
-                    child: BMIGraph(currentValue: 23.5),
+                    child: BMIGraph(currentValue: 23.5, graphWidth: graphWidth),
                   ),
                 ],
               ),
