@@ -55,13 +55,16 @@ class _HomeScreenState extends State<HomeScreen> implements AuthStateListener {
           automaticallyImplyLeading: false,
           backgroundColor: theme.scaffoldBackgroundColor,
           actions: [
-            IconButton(
-                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
-                icon: Icon(
-                  Icons.refresh,
-                  size: 28,
-                ),
-                onPressed: () {})
+            Container(
+              margin: const EdgeInsets.only(right: 8.0),
+              child: IconButton(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
+                  icon: Icon(
+                    Icons.refresh,
+                    size: 28,
+                  ),
+                  onPressed: () {}),
+            )
           ],
           title: Padding(
             padding: const EdgeInsets.only(left: 8.0),
@@ -131,7 +134,7 @@ class _HomeScreenState extends State<HomeScreen> implements AuthStateListener {
         width: MediaQuery.of(context).size.width / 1.5,
         height: 55,
         child: FloatingActionButton.extended(
-          onPressed: () {},
+          onPressed: () => Navigator.pushNamed(context, '/new'),
           label: Text(
             'NEW WEIGHT',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
