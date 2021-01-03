@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import 'package:weight_tracker/auth.dart';
@@ -92,7 +91,7 @@ class _HomeScreenState extends State<HomeScreen> implements AuthStateListener {
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     child: BMICalculator(
                       user: session.user,
-                      currentWeight: currentWeight,
+                      weight: currentWeight,
                       graphWidth: size.width - 325,
                     ),
                   ),
@@ -108,15 +107,15 @@ class _HomeScreenState extends State<HomeScreen> implements AuthStateListener {
               width: size.width,
               top: (size.height - kToolbarHeight) / 1.17,
               child: new Container(
-                height: 80.0,
+                height: 100.0,
                 decoration: new BoxDecoration(
                   gradient: new LinearGradient(
                     begin: const Alignment(0.0, -1.0),
                     end: const Alignment(0.0, 0.2),
                     colors: <Color>[
-                      theme.colorScheme.background.withOpacity(.2),
-                      theme.colorScheme.background.withOpacity(.4),
-                      theme.colorScheme.background.withOpacity(.8),
+                      theme.colorScheme.background.withOpacity(.3),
+                      theme.colorScheme.background.withOpacity(.6),
+                      theme.colorScheme.background.withOpacity(.9),
                       // Colors.red,
                     ],
                   ),

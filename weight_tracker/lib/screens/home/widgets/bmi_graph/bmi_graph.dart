@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:weight_tracker/util/bmi_utils.dart';
 import 'package:weight_tracker/util/list_utils.dart';
 
 class BMIGraph extends StatelessWidget {
@@ -62,20 +63,10 @@ class BMIGraph extends StatelessWidget {
   }
 
   Widget _buildGraphItem(double value, double startValue, double width, ThemeData theme) {
-    Color color = Colors.blueAccent;
-
-    if (value < 18.5) {
-      color = Colors.blue;
-    } else if (value >= 18.5 && value <= 24.9) {
-      color = theme.colorScheme.primary;
-    } else if (value >= 25.0 && value <= 29.9) {
-      color = Colors.yellow;
-    } else {
-      color = Colors.red;
-    }
+    final Map<String, dynamic> data = getLabelAndColorByBMIResult(value, theme);
     return Container(
-      color: color,
       width: width,
+      color: data['color'],
       height: currentValue == value ? 35 : 25,
       padding: EdgeInsets.symmetric(vertical: 0),
       margin: EdgeInsets.only(left: value != startValue ? lineGap : 0),

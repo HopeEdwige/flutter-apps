@@ -3,17 +3,27 @@ import 'package:flutter/material.dart';
 
 import 'package:weight_tracker/models/user.dart';
 import 'package:weight_tracker/screens/home/widgets/bmi_graph/bmi_graph.dart';
+import 'package:weight_tracker/util/bmi_utils.dart';
 
 class BMICalculator extends StatelessWidget {
   final User user;
+  final double weight;
   final double graphWidth;
-  final double currentWeight;
 
-  BMICalculator({Key key, @required this.user, @required this.currentWeight, this.graphWidth}) : super(key: key);
+  BMICalculator({
+    Key key,
+    @required this.user,
+    @required this.weight,
+    this.graphWidth,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    ThemeData theme = Theme.of(context);
+    final ThemeData theme = Theme.of(context);
+    final double bmiResult = calculateBMI(heightInMeter: user.height, weightInKg: weight);
+    final Map<String, dynamic> data = getLabelAndColorByBMIResult(bmiResult, theme);
+    final Color resultColor = data['color'];
+    final String resultLabel = data['label'];
 
     return Container(
       child: Column(
@@ -46,20 +56,20 @@ class BMICalculator extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.baseline,
                     children: [
                       Text(
-                        '23.14',
+                        bmiResult.toString(),
                         style: TextStyle(
+                          fontWeight: FontWeight.bold,
                           color: theme.textTheme.headline5.color,
                           fontSize: theme.textTheme.headline4.fontSize,
-                          fontWeight: FontWeight.bold,
                         ),
                       ),
                       SizedBox(
                         width: 8,
                       ),
                       Text(
-                        'YOU\'RE HEALTHY',
+                        resultLabel.toUpperCase(),
                         style: TextStyle(
-                          color: theme.colorScheme.primary,
+                          color: resultColor,
                           fontSize: theme.textTheme.subtitle2.fontSize,
                           fontWeight: FontWeight.bold,
                         ),
@@ -67,9 +77,9 @@ class BMICalculator extends StatelessWidget {
                     ],
                   ),
                   Container(
-                    margin: EdgeInsets.only(top: 10),
                     width: double.infinity,
-                    child: BMIGraph(currentValue: 23.5, graphWidth: graphWidth),
+                    margin: EdgeInsets.only(top: 10),
+                    child: BMIGraph(currentValue: bmiResult, graphWidth: graphWidth),
                   ),
                 ],
               ),

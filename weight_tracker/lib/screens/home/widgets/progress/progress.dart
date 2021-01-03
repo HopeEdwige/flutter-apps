@@ -56,9 +56,9 @@ class Progress extends StatelessWidget {
   }
 
   double calculatePercentage(double initial, double current, double target) {
-    double totalTime = target - initial;
+    double total = target - initial;
     double progress = current - initial;
-    double percentage = ((progress / totalTime) * 100).clamp(0.0, 100.0);
+    double percentage = ((progress / total) * 100).clamp(0.0, 100.0);
     return percentage / 100;
   }
 }

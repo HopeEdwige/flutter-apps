@@ -5,6 +5,7 @@ import 'package:weight_tracker/auth.dart';
 import 'package:weight_tracker/models/user.dart';
 import 'package:weight_tracker/models/session.dart';
 import 'package:weight_tracker/services/db_service.dart';
+import 'package:weight_tracker/util/bmi_utils.dart';
 
 class SignUpScreen extends StatefulWidget {
   @override
@@ -75,7 +76,7 @@ class _SignUpScreenState extends State<SignUpScreen> implements AuthStateListene
 
   _handleSignUp() async {
     final DBService db = new DBService();
-    final User user = new User("Wali", 1, 25, 10, 90.50, 75);
+    final User user = new User("Wali", 1, 25, convertHeightFromFtToMeters(5.7), 90.50, 75);
     await db.saveUser(user);
     authStateProvider.notify(AuthState.LOGGED_IN, user);
   }
