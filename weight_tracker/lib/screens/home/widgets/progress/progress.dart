@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:weight_tracker/widgets/text_with_measure/index.dart';
 
 const sheetPadding = 50;
 
@@ -23,15 +24,14 @@ class Progress extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              _buildWeightMeasure(theme, initial.toString()),
-              _buildWeightMeasure(
-                theme,
-                current.toString(),
+              TextWithMeasure(text: initial.toString()),
+              TextWithMeasure(
+                measureFontSize: 20,
+                text: current.toString(),
                 color: theme.textTheme.headline5.color,
                 fontSize: theme.textTheme.headline2.fontSize,
-                measureFontSize: 20,
               ),
-              _buildWeightMeasure(theme, target.toString()),
+              TextWithMeasure(text: target.toString()),
             ],
           ),
           SizedBox(
@@ -53,22 +53,6 @@ class Progress extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  Widget _buildWeightMeasure(ThemeData theme, String value, {double fontSize, Color color, double measureFontSize}) {
-    color = color ?? theme.textTheme.bodyText2.color;
-    fontSize = fontSize ?? theme.textTheme.headline5.fontSize;
-    measureFontSize = measureFontSize ?? theme.textTheme.subtitle1.fontSize;
-
-    return Text.rich(TextSpan(
-      text: value,
-      style: TextStyle(
-        color: color,
-        fontSize: fontSize,
-        fontWeight: FontWeight.bold,
-      ),
-      children: [TextSpan(text: 'kg', style: TextStyle(fontSize: measureFontSize))],
-    ));
   }
 
   double calculatePercentage(double initial, double current, double target) {

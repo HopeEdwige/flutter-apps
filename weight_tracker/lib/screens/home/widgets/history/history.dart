@@ -31,9 +31,6 @@ class History extends StatelessWidget {
               )
             ],
           ),
-          SizedBox(
-            height: 10,
-          ),
           HistoryList(
             items: [
               Weight(value: 62.5, timestamp: null, difference: 0.5, differenceType: WeightDifferenceType.INCREASED),
