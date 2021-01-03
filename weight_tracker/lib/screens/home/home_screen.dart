@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:fl_chart/fl_chart.dart';
 
 import 'package:weight_tracker/auth.dart';
 import 'package:weight_tracker/models/user.dart';
 import 'package:weight_tracker/models/session.dart';
+import 'package:weight_tracker/screens/home/widgets/bmi_calculator/index.dart';
 import 'package:weight_tracker/screens/home/widgets/chart/index.dart';
 import 'package:weight_tracker/screens/home/widgets/header/index.dart';
 import 'package:weight_tracker/screens/home/widgets/progress/index.dart';
@@ -32,8 +32,8 @@ class _HomeScreenState extends State<HomeScreen> implements AuthStateListener {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
     bool isReady = authStateProvider.ready;
+    double currentWeight = 85.30;
 
     //todo find a better solution :(
     if (!isReady) {
@@ -61,6 +61,13 @@ class _HomeScreenState extends State<HomeScreen> implements AuthStateListener {
                       current: 85,
                       target: session.user?.targetWeight,
                       initial: session.user?.initialWeight,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    child: BMICalculator(
+                      currentWeight: currentWeight,
+                      user: session.user,
                     ),
                   ),
                 ],

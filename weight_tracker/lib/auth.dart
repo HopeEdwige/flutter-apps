@@ -1,12 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:weight_tracker/models/user.dart';
 import 'package:weight_tracker/services/db_service.dart';
 
 enum AuthState { LOGGED_IN, LOGGED_OUT }
 
 abstract class AuthStateListener {
-  BuildContext _ctx;
-
   void onAuthStateChanged(AuthState state, User user);
 }
 

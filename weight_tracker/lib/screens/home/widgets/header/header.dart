@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:weight_tracker/models/session.dart';
 
 class Header extends StatelessWidget {
   final String name;

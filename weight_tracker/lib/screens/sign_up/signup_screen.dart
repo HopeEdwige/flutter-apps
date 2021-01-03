@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import 'package:weight_tracker/auth.dart';
-import 'package:weight_tracker/models/session.dart';
 import 'package:weight_tracker/models/user.dart';
-import 'package:weight_tracker/screens/home/home_screen.dart';
+import 'package:weight_tracker/models/session.dart';
 import 'package:weight_tracker/services/db_service.dart';
 
 class SignUpScreen extends StatefulWidget {
