@@ -70,6 +70,7 @@ class _NewWeightScreenState extends State<NewWeightScreen> {
               children: [
                 Container(
                   margin: EdgeInsets.only(top: size.height / 10),
+                  width: size.width,
                   height: tapeHeight,
                   // color: Colors.red,
                   child: WeightSlider(
