@@ -32,53 +32,60 @@ class HistoryList extends StatelessWidget {
               break;
           }
 
-          return Card(
-              child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 18.0, horizontal: 24),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Today',
-                      textAlign: TextAlign.left,
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Icon(
-                          icon,
-                          size: 18,
-                          color: highLightColor,
-                        ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Text(
-                          '${item.difference} kg',
-                          style: TextStyle(color: highLightColor, fontSize: 20),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                Column(
-                  children: [
-                    TextWithMeasure(
-                      fontSize: 30,
-                      text: item.value.toString(),
-                      color: theme.textTheme.headline5.color,
-                    )
-                  ],
-                )
-              ],
-            ),
-          ));
+          return Dismissible(
+            key: Key(item.timestamp.toString()),
+            background: Container(color: Colors.red),
+            onDismissed: (direction) {
+              Scaffold.of(context).showSnackBar(SnackBar(content: Text("Entry removed")));
+            },
+            child: Card(
+                child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 18.0, horizontal: 24),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Today',
+                        textAlign: TextAlign.left,
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Icon(
+                            icon,
+                            size: 18,
+                            color: highLightColor,
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            '${item.difference} kg',
+                            style: TextStyle(color: highLightColor, fontSize: 20),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      TextWithMeasure(
+                        fontSize: 30,
+                        text: item.value.toString(),
+                        color: theme.textTheme.headline5.color,
+                      )
+                    ],
+                  )
+                ],
+              ),
+            )),
+          );
         }).toList(),
       ),
     );

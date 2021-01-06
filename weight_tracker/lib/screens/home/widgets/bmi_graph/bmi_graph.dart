@@ -31,6 +31,7 @@ class BMIGraph extends StatelessWidget {
       child: Column(
         children: [
           Row(children: graph),
+          SizedBox(height: 10),
           Row(
             children: [
               Expanded(

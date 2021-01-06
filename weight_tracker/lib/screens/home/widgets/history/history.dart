@@ -23,7 +23,9 @@ class History extends StatelessWidget {
                 ),
               ),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushNamed(context, '/history');
+                },
                 child: Text(
                   'See All',
                   style: TextStyle(fontSize: 16),

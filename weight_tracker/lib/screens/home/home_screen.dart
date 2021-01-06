@@ -108,7 +108,7 @@ class _HomeScreenState extends State<HomeScreen> implements AuthStateListener {
             Positioned(
               height: 100,
               width: size.width,
-              top: (size.height - kToolbarHeight) / 1.17,
+              bottom: 0,
               child: new Container(
                 height: 100.0,
                 decoration: new BoxDecoration(
