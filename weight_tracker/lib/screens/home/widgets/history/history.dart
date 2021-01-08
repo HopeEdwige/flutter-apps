@@ -3,6 +3,11 @@ import 'package:weight_tracker/models/weight.dart';
 import 'package:weight_tracker/widgets/history_list/history_list.dart';
 
 class History extends StatelessWidget {
+  final List<Weight> items;
+  final int itemsToDisplay = 4;
+
+  const History(this.items, {Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
@@ -34,13 +39,7 @@ class History extends StatelessWidget {
             ],
           ),
           HistoryList(
-            items: [
-              Weight(value: 62.5, timestamp: null, difference: 0.5, differenceType: WeightDifferenceType.INCREASED),
-              Weight(value: 62.0, timestamp: null, difference: 0.8, differenceType: WeightDifferenceType.DECREASED),
-              Weight(value: 61.2, timestamp: null, difference: 0.3, differenceType: WeightDifferenceType.DECREASED),
-              Weight(value: 59.2, timestamp: null, difference: 1.0, differenceType: WeightDifferenceType.SAME),
-              Weight(value: 59.2, timestamp: null, difference: 1.0, differenceType: WeightDifferenceType.INCREASED),
-            ],
+            items: items.take(itemsToDisplay).toList(growable: false),
           ),
         ],
       ),

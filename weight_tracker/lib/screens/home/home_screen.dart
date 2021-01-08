@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import 'package:weight_tracker/auth.dart';
 import 'package:weight_tracker/models/user.dart';
-import 'package:weight_tracker/models/session.dart';
+import 'package:weight_tracker/models/weight.dart';
+import 'package:weight_tracker/services/db_service.dart';
+
 import 'package:weight_tracker/screens/home/widgets/chart/index.dart';
 import 'package:weight_tracker/screens/home/widgets/header/index.dart';
 import 'package:weight_tracker/screens/home/widgets/history/index.dart';
@@ -15,19 +15,23 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> implements AuthStateListener {
-  AuthStateProvider authStateProvider;
+class _HomeScreenState extends State<HomeScreen> {
+  User currentUser;
+  bool isLoadingData;
+  DBService dbService;
+  List<Weight> historyItems;
+
+  double get currentWeight => historyItems.isNotEmpty ? historyItems.first.value : 45;
 
   @override
   void initState() {
-    authStateProvider = new AuthStateProvider();
-    authStateProvider.subscribe(this);
-    super.initState();
-  }
+    historyItems = [];
+    isLoadingData = true;
+    dbService = DBService();
 
-  @override
-  void onAuthStateChanged(AuthState state, User user) {
-    if (state == AuthState.LOGGED_OUT) Navigator.pushReplacementNamed(context, '/sign-up');
+    Future.delayed(Duration.zero, () => fetchData());
+
+    super.initState();
   }
 
   @override
@@ -35,11 +39,7 @@ class _HomeScreenState extends State<HomeScreen> implements AuthStateListener {
     final ThemeData theme = Theme.of(context);
     final Size size = MediaQuery.of(context).size;
 
-    bool isReady = authStateProvider.ready;
-    double currentWeight = 85.30;
-
-    //todo find a better solution :(
-    if (!isReady) {
+    if (currentUser == null) {
       return Scaffold(
         body: Center(
           child: CircularProgressIndicator(),
@@ -68,9 +68,7 @@ class _HomeScreenState extends State<HomeScreen> implements AuthStateListener {
           ],
           title: Padding(
             padding: const EdgeInsets.only(left: 8.0),
-            child: Consumer<Session>(
-              builder: (context, session, child) => Header(name: session.user?.name),
-            ),
+            child: Header(name: currentUser.name),
           ),
         ),
       ),
@@ -78,32 +76,30 @@ class _HomeScreenState extends State<HomeScreen> implements AuthStateListener {
         padding: const EdgeInsets.symmetric(horizontal: 25),
         child: Stack(
           children: [
-            Consumer<Session>(
-              builder: (context, session, child) => ListView(
-                children: <Widget>[
-                  Chart(),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    child: Progress(
-                      current: 78.4,
-                      target: session.user?.targetWeight,
-                      initial: session.user?.initialWeight,
-                    ),
+            ListView(
+              children: <Widget>[
+                Chart(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  child: Progress(
+                    current: historyItems.length > 0 ? historyItems[0].value : 0,
+                    target: currentUser.targetWeight,
+                    initial: currentUser.initialWeight,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    child: BMICalculator(
-                      user: session.user,
-                      weight: currentWeight,
-                      graphWidth: size.width - 325,
-                    ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  child: BMICalculator(
+                    height: currentUser.height,
+                    weight: currentWeight,
+                    graphWidth: size.width - 325,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 80),
-                    child: History(),
-                  ),
-                ],
-              ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 80),
+                  child: History(historyItems),
+                ),
+              ],
             ),
             Positioned(
               height: 100,
@@ -134,7 +130,7 @@ class _HomeScreenState extends State<HomeScreen> implements AuthStateListener {
         width: MediaQuery.of(context).size.width / 1.5,
         height: 55,
         child: FloatingActionButton.extended(
-          onPressed: () => Navigator.pushNamed(context, '/new'),
+          onPressed: () => _handleNewWeightPress(),
           label: Text(
             'NEW WEIGHT',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
@@ -142,5 +138,36 @@ class _HomeScreenState extends State<HomeScreen> implements AuthStateListener {
         ),
       ),
     );
+  }
+
+  void _handleNewWeightPress() async {
+    var shouldRefresh = await Navigator.pushNamed(
+      context,
+      '/new',
+      arguments: {'selectedWeight': currentWeight},
+    );
+
+    if (shouldRefresh) {
+      refreshData();
+    }
+  }
+
+  void fetchData() async {
+    final Map currentUserMap = await dbService.currentUser();
+    final List<Weight> results = await dbService.listWeight(userId: currentUserMap['id']);
+
+    setState(() {
+      isLoadingData = false;
+      historyItems = results;
+      currentUser = User.fromMap(currentUserMap);
+    });
+  }
+
+  void refreshData() async {
+    final List<Weight> results = await dbService.listWeight(userId: currentUser.id);
+
+    setState(() {
+      historyItems = results;
+    });
   }
 }

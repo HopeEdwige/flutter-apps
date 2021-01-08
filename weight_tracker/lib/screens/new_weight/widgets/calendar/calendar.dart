@@ -2,25 +2,10 @@ import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-class Calendar extends StatefulWidget {
-  @override
-  _CalendarState createState() => _CalendarState();
-}
+class Calendar extends StatelessWidget {
+  final CalendarController controller;
 
-class _CalendarState extends State<Calendar> {
-  CalendarController _calendarController;
-
-  @override
-  void initState() {
-    super.initState();
-    _calendarController = CalendarController();
-  }
-
-  @override
-  void dispose() {
-    _calendarController.dispose();
-    super.dispose();
-  }
+  const Calendar({Key key, @required this.controller}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +20,7 @@ class _CalendarState extends State<Calendar> {
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
         child: TableCalendar(
-          calendarController: _calendarController,
+          calendarController: controller,
           calendarStyle: CalendarStyle(
             highlightToday: false,
             outsideDaysVisible: false,

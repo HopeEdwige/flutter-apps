@@ -5,6 +5,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'package:weight_tracker/models/user.dart';
+import 'package:weight_tracker/models/weight.dart';
 
 class DBService {
   static final DBService _instance = new DBService.internal();
@@ -24,14 +25,19 @@ class DBService {
   initDb() async {
     io.Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentsDirectory.path, 'main.db');
+
+    print("Database path => $path");
+
     var theDb = await openDatabase(path, version: 1, onCreate: _onCreate);
     return theDb;
   }
 
   void _onCreate(Database db, int version) async {
-    // When creating the db, create the table
     await db.execute(
       'CREATE TABLE User(id INTEGER PRIMARY KEY, name TEXT, age INTEGER, gender INTEGER, height REAL, targetWeight REAL, initialWeight REAL)',
+    );
+    await db.execute(
+      'CREATE TABLE Weight(id INTEGER PRIMARY KEY, value REAL, timestamp DATETIME, difference REAL, differenceType INTEGER, userId INTEGER REFERENCES User)',
     );
     print('[INFO] => DB => Tables created');
   }
@@ -52,5 +58,30 @@ class DBService {
     final Database dbClient = await db;
     final res = await dbClient.query('User');
     return res[0];
+  }
+
+  Future<int> insertWeight(Weight weight, int userId) async {
+    final Database dbClient = await db;
+    weight.setUserId(userId);
+    weight.setDiff(await fetchPreviousWeight(userId));
+    return await dbClient.insert('Weight', weight.toMap());
+  }
+
+  Future<Weight> fetchPreviousWeight(int userId) async {
+    final res = await listWeight(userId: userId);
+    return res.length > 0 ? res.first : null;
+  }
+
+  Future<List<Weight>> listWeight({int userId, limit = 6, offset = 0}) async {
+    final Database dbClient = await db;
+    final res = await dbClient.query(
+      'Weight',
+      limit: limit,
+      offset: offset,
+      where: 'userId = ?',
+      whereArgs: [userId],
+      orderBy: 'timestamp DESC',
+    );
+    return res.map((e) => Weight.fromMap(e)).toList(growable: false);
   }
 }

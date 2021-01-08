@@ -6,13 +6,13 @@ import 'package:weight_tracker/screens/home/widgets/bmi_graph/bmi_graph.dart';
 import 'package:weight_tracker/util/bmi_utils.dart';
 
 class BMICalculator extends StatelessWidget {
-  final User user;
+  final double height;
   final double weight;
   final double graphWidth;
 
   BMICalculator({
     Key key,
-    @required this.user,
+    @required this.height,
     @required this.weight,
     this.graphWidth,
   }) : super(key: key);
@@ -20,7 +20,7 @@ class BMICalculator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    final double bmiResult = calculateBMI(heightInMeter: user.height, weightInKg: weight);
+    final double bmiResult = calculateBMI(heightInMeter: height, weightInKg: weight);
     final Map<String, dynamic> data = getLabelAndColorByBMIResult(bmiResult, theme);
     final Color resultColor = data['color'];
     final String resultLabel = data['label'];

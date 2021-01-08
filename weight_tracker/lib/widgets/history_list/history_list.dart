@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:weight_tracker/calender_date.dart';
 import 'package:weight_tracker/models/weight.dart';
 import 'package:weight_tracker/widgets/text_with_measure/index.dart';
 
@@ -9,84 +10,81 @@ class HistoryList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ThemeData theme = Theme.of(context);
-
     return Container(
       child: Column(
-        children: items.map((item) {
-          IconData icon;
-          Color highLightColor;
+        children: items.map((item) => _buildCard(context, item)).toList(),
+      ),
+    );
+  }
 
-          switch (item.differenceType) {
-            case WeightDifferenceType.INCREASED:
-              icon = Icons.arrow_upward;
-              highLightColor = Colors.red;
-              break;
-            case WeightDifferenceType.DECREASED:
-              icon = Icons.arrow_downward;
-              highLightColor = theme.colorScheme.primary;
-              break;
-            case WeightDifferenceType.SAME:
-              icon = Icons.circle;
-              highLightColor = Colors.yellow;
-              break;
-          }
+  Widget _buildCard(BuildContext context, Weight item) {
+    final ThemeData theme = Theme.of(context);
+    final formattedDate = CalendarDate.fromTimeStamp(item.timestamp).toHuman;
 
-          return Dismissible(
-            key: Key(item.timestamp.toString()),
-            background: Container(color: Colors.red),
-            onDismissed: (direction) {
-              Scaffold.of(context).showSnackBar(SnackBar(content: Text("Entry removed")));
-            },
-            child: Card(
-                child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 18.0, horizontal: 24),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Today',
-                        textAlign: TextAlign.left,
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Icon(
-                            icon,
-                            size: 18,
-                            color: highLightColor,
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Text(
-                            '${item.difference} kg',
-                            style: TextStyle(color: highLightColor, fontSize: 20),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      TextWithMeasure(
-                        fontSize: 30,
-                        text: item.value.toString(),
-                        color: theme.textTheme.headline5.color,
-                      )
-                    ],
-                  )
-                ],
-              ),
-            )),
-          );
-        }).toList(),
+    IconData icon;
+    Color highLightColor;
+
+    switch (item.diff.type) {
+      case WeightDifferenceType.INCREASED:
+        icon = Icons.arrow_upward;
+        highLightColor = Colors.red;
+        break;
+      case WeightDifferenceType.DECREASED:
+        icon = Icons.arrow_downward;
+        highLightColor = theme.colorScheme.primary;
+        break;
+      case WeightDifferenceType.SAME:
+        icon = Icons.circle;
+        highLightColor = Colors.yellow;
+        break;
+    }
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 18.0, horizontal: 24),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  formattedDate,
+                  textAlign: TextAlign.left,
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Icon(
+                      icon,
+                      color: highLightColor,
+                    ),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    TextWithMeasure(
+                      fontSize: 20,
+                      color: highLightColor,
+                      text: item.diff.value.toString(),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            Column(
+              children: [
+                TextWithMeasure(
+                  fontSize: 30,
+                  text: item.value.toString(),
+                  color: theme.textTheme.headline5.color,
+                )
+              ],
+            )
+          ],
+        ),
       ),
     );
   }

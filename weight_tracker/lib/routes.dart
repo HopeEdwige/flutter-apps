@@ -10,7 +10,10 @@ class Routes {
 
   static final list = <String, WidgetBuilder>{
     '/': (BuildContext context) => new HomeScreen(),
-    '/new': (BuildContext context) => new NewWeightScreen(),
+    '/new': (BuildContext context) {
+      final arguments = ModalRoute.of(context).settings.arguments as Map;
+      return new NewWeightScreen(selectedWeight: arguments['selectedWeight']);
+    },
     '/history': (BuildContext context) => new HistoryScreen(),
     '/sign-up': (BuildContext context) => new SignUpScreen(),
   };

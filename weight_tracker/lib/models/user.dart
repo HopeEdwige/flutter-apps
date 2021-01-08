@@ -1,4 +1,5 @@
 class User {
+  int id;
   int age;
   int gender;
   double height;
@@ -16,6 +17,7 @@ class User {
   );
 
   User.fromMap(dynamic obj) {
+    this.id = obj["id"];
     this.name = obj["name"];
     this.age = obj["age"];
     this.height = obj["height"];
@@ -26,6 +28,7 @@ class User {
 
   Map<String, dynamic> toMap() {
     var map = new Map<String, dynamic>();
+    map["id"] = this.id;
     map["name"] = this.name;
     map["age"] = this.age;
     map["height"] = this.height;
