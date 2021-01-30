@@ -1,99 +1,64 @@
+import 'package:bezier_chart/bezier_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:fl_chart/fl_chart.dart';
+import 'package:weight_tracker/models/weight.dart';
 
 class Chart extends StatelessWidget {
-  final List<Color> gradientColors = [
-    const Color(0xff23b6e6),
-    const Color(0xff02d39a),
-  ];
+  final List<Weight> history;
+
+  const Chart({Key key, this.history}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    final Size size = MediaQuery.of(context).size;
+    final ThemeData theme = Theme.of(context);
+
+    var lineData = _buildLineData();
+    var d = _getStartEndDate();
+
     return SizedBox(
+      width: size.width,
       height: 180,
-      child: LineChart(
-        _buildChartData(size: size, barData: _buildLineChartBarData()),
+      child: BezierChart(
+        bezierChartScale: BezierChartScale.MONTHLY,
+        fromDate: d['start'],
+        toDate: d['end'],
+        series: [
+          BezierLine(
+            lineColor: theme.colorScheme.primary,
+            lineStrokeWidth: 2,
+            data: lineData,
+          ),
+        ],
+        config: BezierChartConfig(
+          contentWidth: size.width * 12,
+          showDataPoints: false,
+          showVerticalIndicator: true,
+          verticalIndicatorStrokeWidth: 5,
+          startYAxisFromNonZeroValue: false,
+          verticalIndicatorColor: Colors.white.withAlpha(40),
+          displayYAxis: true,
+        ),
       ),
     );
   }
 
-  _buildChartData({Size size, LineChartBarData barData}) {
-    const double margin = 10;
-    const double fontSize = 15;
-    const textStyles = const TextStyle(color: Color(0xff68737d), fontSize: fontSize);
-
-    // random fraction size :)
-    int ratio = (size.aspectRatio * 100).toInt();
-    double reverseSizeX = ((ratio * 5) + size.width) / 13;
-
-    return LineChartData(
-      gridData: FlGridData(show: false),
-      titlesData: FlTitlesData(
-        show: true,
-        bottomTitles: SideTitles(
-          showTitles: true,
-          getTextStyles: (value) => textStyles,
-          getTitles: (value) {
-            switch (value.toInt()) {
-              case 2:
-                return 'MAR';
-              case 5:
-                return 'JUN';
-              case 8:
-                return 'SEP';
-            }
-            return '';
-          },
-          margin: margin,
-        ),
-        leftTitles: SideTitles(
-          showTitles: true,
-          getTextStyles: (value) => textStyles,
-          getTitles: (value) {
-            switch (value.toInt()) {
-              case 1:
-                return '10.2kg';
-              case 3:
-                return '30.5kg';
-              case 5:
-                return '50.0kg';
-            }
-            return '';
-          },
-          reservedSize: reverseSizeX,
-          margin: margin,
-        ),
-      ),
-      borderData: FlBorderData(show: false),
-      minX: 0,
-      maxX: 11,
-      minY: 0,
-      maxY: 5.5,
-      lineBarsData: [barData],
-    );
+  List<DataPoint> _buildLineData() {
+    return this.history.map((record) {
+      return DataPoint<DateTime>(
+        value: record.value,
+        xAxis: DateTime.fromMillisecondsSinceEpoch(record.timestamp * 1000),
+      );
+    }).toList(growable: false);
   }
 
-  _buildLineChartBarData() {
-    return LineChartBarData(
-      spots: [
-        FlSpot(0, 3),
-        FlSpot(2.6, 2),
-        FlSpot(4.9, 5),
-        FlSpot(6.8, 3.1),
-        FlSpot(8, 4),
-        FlSpot(9.5, 3),
-        FlSpot(11, 4),
-      ],
-      isCurved: true,
-      colors: gradientColors,
-      barWidth: 2,
-      isStrokeCapRound: true,
-      dotData: FlDotData(show: false),
-      belowBarData: BarAreaData(
-        show: true,
-        colors: gradientColors.map((color) => color.withOpacity(0.1)).toList(),
-      ),
-    );
+  _getStartEndDate() {
+    var list = [...this.history];
+
+    list.sort((a, b) => a.timestamp.toString().compareTo(b.timestamp.toString()));
+
+    return {
+      'start': DateTime.fromMillisecondsSinceEpoch(list.first.timestamp * 1000),
+      'end': DateTime.fromMillisecondsSinceEpoch(list.last.timestamp * 1000),
+    };
   }
 }

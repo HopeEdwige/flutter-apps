@@ -53,7 +53,7 @@ class BMICalculator extends StatelessWidget {
               child: Column(
                 children: [
                   Row(
-                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    // crossAxisAlignment: CrossAxisAlignment.baseline,
                     children: [
                       Text(
                         bmiResult.toString(),

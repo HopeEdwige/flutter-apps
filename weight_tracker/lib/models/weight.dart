@@ -27,6 +27,8 @@ class Weight {
     );
   }
 
+  String toString() => "value: $value, timestamp: $timestamp, diff: $diff";
+
   Map<String, dynamic> toMap() {
     var map = new Map<String, dynamic>();
 

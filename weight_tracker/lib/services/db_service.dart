@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:io' as io;
-import 'package:path/path.dart';
-import 'package:sqflite/sqflite.dart';
-import 'package:path_provider/path_provider.dart';
 
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:sqflite/sqflite.dart';
 import 'package:weight_tracker/models/user.dart';
 import 'package:weight_tracker/models/weight.dart';
 
@@ -57,7 +57,7 @@ class DBService {
   Future<Map> currentUser() async {
     final Database dbClient = await db;
     final res = await dbClient.query('User');
-    return res[0];
+    return res?.first;
   }
 
   Future<int> insertWeight(Weight weight, int userId) async {

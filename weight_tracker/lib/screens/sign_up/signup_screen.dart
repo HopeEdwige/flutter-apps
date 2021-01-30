@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import 'package:weight_tracker/auth.dart';
-import 'package:weight_tracker/models/user.dart';
 import 'package:weight_tracker/models/session.dart';
+import 'package:weight_tracker/models/user.dart';
 import 'package:weight_tracker/services/db_service.dart';
 import 'package:weight_tracker/util/bmi_utils.dart';
 
@@ -51,7 +50,7 @@ class _SignUpScreenState extends State<SignUpScreen> implements AuthStateListene
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      RaisedButton(
+                      ElevatedButton(
                         onPressed: () => _handleSignUp(),
                         child: Text('Sign up'),
                       ),
@@ -69,7 +68,7 @@ class _SignUpScreenState extends State<SignUpScreen> implements AuthStateListene
   @override
   onAuthStateChanged(AuthState state, User user) {
     if (state == AuthState.LOGGED_IN) {
-      Provider.of<Session>(context).set(user);
+      Provider.of<Session>(context, listen: false).set(user);
       Navigator.of(context).pushReplacementNamed('/');
     }
   }

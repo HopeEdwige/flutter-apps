@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-
 import 'package:weight_tracker/models/user.dart';
 import 'package:weight_tracker/models/weight.dart';
-import 'package:weight_tracker/services/db_service.dart';
-
+import 'package:weight_tracker/screens/home/widgets/bmi_calculator/index.dart';
 import 'package:weight_tracker/screens/home/widgets/chart/index.dart';
 import 'package:weight_tracker/screens/home/widgets/header/index.dart';
 import 'package:weight_tracker/screens/home/widgets/history/index.dart';
 import 'package:weight_tracker/screens/home/widgets/progress/index.dart';
-import 'package:weight_tracker/screens/home/widgets/bmi_calculator/index.dart';
+import 'package:weight_tracker/services/db_service.dart';
+import 'package:weight_tracker/util/bmi_utils.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -21,7 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
   DBService dbService;
   List<Weight> historyItems;
 
-  double get currentWeight => historyItems.isNotEmpty ? historyItems.first.value : 45;
+  double get currentWeight => historyItems.isNotEmpty ? historyItems.first.value : 70;
 
   @override
   void initState() {
@@ -29,7 +28,13 @@ class _HomeScreenState extends State<HomeScreen> {
     isLoadingData = true;
     dbService = DBService();
 
-    Future.delayed(Duration.zero, () => fetchData());
+    Future.delayed(Duration.zero, () => fetchData()).catchError((e) async {
+      // todo remove me :(
+      final DBService db = new DBService();
+      final User user = new User("Wali", 1, 25, convertHeightFromFtToMeters(5.7), 90.50, 75);
+      await db.saveUser(user);
+      await fetchData();
+    });
 
     super.initState();
   }
@@ -78,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             ListView(
               children: <Widget>[
-                Chart(),
+                Chart(history: historyItems),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   child: Progress(
@@ -144,15 +149,15 @@ class _HomeScreenState extends State<HomeScreen> {
     var shouldRefresh = await Navigator.pushNamed(
       context,
       '/new',
-      arguments: {'selectedWeight': currentWeight},
+      arguments: {'selectedWeight': 70.0},
     );
 
-    if (shouldRefresh) {
+    if (shouldRefresh == true) {
       refreshData();
     }
   }
 
-  void fetchData() async {
+  fetchData() async {
     final Map currentUserMap = await dbService.currentUser();
     final List<Weight> results = await dbService.listWeight(userId: currentUserMap['id']);
 

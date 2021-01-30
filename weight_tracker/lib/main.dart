@@ -7,7 +7,8 @@ import 'package:weight_tracker/util/theme_utils.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   runApp(App());
 }
 
@@ -16,7 +17,9 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(builder: (context) => Session()),
+        ChangeNotifierProvider(
+          create: (context) => Session(),
+        ),
       ],
       child: MaterialApp(
         routes: Routes.list,
